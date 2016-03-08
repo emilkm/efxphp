@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<phpunit 
+    processIsolation="false" 
+    backupGlobals="false" 
+    backupStaticAttributes="false" 
+    stopOnError="false" 
+    stopOnFailure="false" 
+    stopOnSkipped="false" 
+    stopOnIncomplete="false" 
+    bootstrap="bootstrap.php"
+    >
+</phpunit>

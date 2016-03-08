@@ -1,0 +1,23 @@
+{
+    "name": "emilkm/efxphp",
+    "description": "PHP server library for AMF applications",
+    "type": "library",
+    "keywords": [
+        "efxphp",
+        "amf"
+    ],
+    "homepage": "http://emilmalinov.com/efxphp",
+    "license": "Apache License 2.0",
+    "authors": [
+        {
+            "name": "Emil Malinov",
+            "email": "emilkm@gmail.com"
+        }
+    ],
+    "suggest": {
+        "emilkm/amfext": "Custom PHP extension for Action Message Format (AMF) encoding and decoding with support for AMF0 and AMF3"
+    },
+    "require": {
+        "php": ">=5.6.0"
+    }
+}
