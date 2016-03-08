@@ -14,7 +14,7 @@ namespace emilkm\efxphp;
  * @author  Emil Malinov
  * @package efxphp
  *
- * List properties for intellisence in some IDEs
+ * List properties for intellisense in some IDEs
  *
  * @property bool $productionMode
  * @property string $servicesRootDirectory

@@ -17,7 +17,7 @@ use emilkm\efxphp\ServerConfig;
  * @package    efxphp
  * @subpackage tests
  *
- * List properties for intellisence in some IDEs
+ * List properties for intellisense in some IDEs
  *
  * @property array $databases
  */
