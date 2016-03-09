@@ -276,6 +276,7 @@ class CommentParser
      * @param $subject
      *
      * @return array
+     *
      * @throws Exception
      */
     private function parseEmbeddedData($subject)

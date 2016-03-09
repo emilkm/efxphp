@@ -37,12 +37,13 @@ class MetadataCache
     }
 
     /**
-     * store data in the cache
+     * Store data in the cache
      *
      * @param mixed $data
      *
+     * @return bool True if successful
+     *
      * @throws Exception
-     * @return boolean true if successful
      */
     public function set($data)
     {
@@ -85,7 +86,7 @@ $s");
     }
 
     /**
-     * retrieve data from the cache
+     * Retrieve data from the cache
      *
      * @param string $name
      * @param bool   $ignoreErrors
@@ -101,12 +102,12 @@ $s");
     }
 
     /**
-     * delete data from the cache
+     * Delete data from the cache
      *
      * @param string $name
      * @param bool   $ignoreErrors
      *
-     * @return boolean true if successful
+     * @return bool True if successful
      */
     public function clear($name, $ignoreErrors = false)
     {
@@ -114,11 +115,11 @@ $s");
     }
 
     /**
-     * check if the given name is cached
+     * Check if the given name is cached
      *
      * @param string $name
      *
-     * @return boolean true if cached
+     * @return bool True if cached
      */
     public function isCached($name)
     {

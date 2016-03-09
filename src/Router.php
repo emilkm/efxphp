@@ -236,7 +236,7 @@ class Router
      * @param string $className
      * @param array  $scope     local scope
      *
-     * @return string|boolean returns the class name or false
+     * @return string|bool The class name or false
      */
     public function resolve($className, array $scope)
     {
@@ -331,8 +331,9 @@ class Router
      * @param ReflectionClass $class
      * @param array           $scope
      *
-     * @throws Exception
      * @return array
+     *
+     * @throws Exception
      */
     protected function getTypeAndModel(ReflectionClass $class, array $scope)
     {

@@ -73,6 +73,7 @@ class Input extends AbstractInput
      * a header value or a message body.
      *
      * @return mixed
+     *
      * @throws ClassNotFoundException, IOException when reading object process failed
      */
     public function readObject()
@@ -92,6 +93,7 @@ class Input extends AbstractInput
 
     /**
      * @param mixed $type The value AMF0 type
+     *
      * @return mixed The php version of the data in the Packet block
      */
     protected function readAmf0ObjectValue($type)
@@ -151,6 +153,7 @@ class Input extends AbstractInput
 
     /**
      * @param bool $long
+     *
      * @return string
      */
     protected function readAmf0String($long)
@@ -553,6 +556,7 @@ class Input extends AbstractInput
 
     /**
      * @param mixed $ref
+     *
      * @return TraitsInfo
      */
     protected function readAmf3Traits($ref)
@@ -577,7 +581,9 @@ class Input extends AbstractInput
      * Reads a vector array of objects from the AMF stream. This works for all vector arrays: vector-object, vector-int vector-uint and
      * vector-double. The Vector is cast to a PHP array. Please note that because of the way php handles integers, uints have to be cast as
      * floats. See {@link http://php.net/manual/en/language.types.integer.php}
+     *
      * @param int $type
+     *
      * @return Vector
      */
     protected function readAmf3Vector($type)

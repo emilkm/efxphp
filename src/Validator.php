@@ -27,6 +27,7 @@ class Validator
      * @param ValidationInfo $info
      *
      * @return string
+     *
      * @throws ValidationException
      */
     public function tel($input, ValidationInfo $info = null)
@@ -49,6 +50,7 @@ class Validator
      * @param ValidationInfo $info
      *
      * @return string
+     *
      * @throws ValidationException
      */
     public function email($input, ValidationInfo $info = null)
@@ -69,6 +71,7 @@ class Validator
      * @param ValidationInfo $info
      *
      * @return string
+     *
      * @throws ValidationException
      */
     public function date($input, ValidationInfo $info = null)

@@ -33,7 +33,7 @@ class ServerConfig extends AbstractConfig
      * When set to false, it will run in debug mode
      * and parse the class files every time
      *
-     * @var boolean
+     * @var bool
      */
     protected $productionMode = false;
 
@@ -52,7 +52,7 @@ class ServerConfig extends AbstractConfig
     protected $servicesRootNamespace = false;
 
     /**
-     * @var string full path of the directory where all the generated files will
+     * @var string The full path of the directory where all the generated files will
      * be kept. When set to null (default) it will use the cache folder that is
      * in the same folder as index.php (gateway)
      */
@@ -74,7 +74,7 @@ class ServerConfig extends AbstractConfig
     // ------------------------------------------------------------------
 
     /**
-     * @var bool enables CORS support
+     * @var bool Enables CORS support
      */
     protected $crossOriginResourceSharing = false;
     

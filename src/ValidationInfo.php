@@ -28,26 +28,27 @@ class ValidationInfo
     private $embeddedDataName;
 
     /**
-     * @var mixed given value for the parameter
+     * @var mixed Given value for the parameter
      */
     public $value;
+
     /**
-     * @var string proper name for given parameter
+     * @var string Proper name for given parameter
      */
     public $label;
+
     /**
-     * @var string html element that can be used to represent the parameter for
-     *             input
+     * @var string HTML element that can be used to represent the parameter for input
      */
     public $field;
+
     /**
-     * @var mixed default value for the parameter
+     * @var mixed Default value for the parameter
      */
     public $default;
+
     /**
-     * Name of the variable being validated
-     *
-     * @var string variable name
+     * @var string Name of the variable being validated
      */
     public $name;
 
@@ -57,7 +58,7 @@ class ValidationInfo
     public $required;
 
     /**
-     * @var string body or header or query where this parameter is coming from
+     * @var string Body, header or query where this parameter is coming from
      * in the http request
      */
     public $from;
@@ -66,7 +67,7 @@ class ValidationInfo
      * Data type of the variable being validated.
      * It will be mostly string
      *
-     * @var string|array multiple types are specified it will be of
+     * @var string|array Multiple types are specified it will be of
      *      type array otherwise it will be a string
      */
     public $type;
@@ -75,7 +76,7 @@ class ValidationInfo
      * When the type is array, this field is used to define the type of the
      * contents of the array
      *
-     * @var string|null when all the items in an array are of certain type, we
+     * @var string|null When all the items in an array are of certain type, we
      * can set this property. It will be null if the items can be of any type
      */
     public $contentType;
@@ -87,7 +88,7 @@ class ValidationInfo
      * When set to true it will attempt to fix the value if possible
      * or throw an exception or return false when it cant be fixed.
      *
-     * @var boolean true or false
+     * @var bool
      */
     public $fix = false;
 
@@ -101,24 +102,27 @@ class ValidationInfo
     // VALUE RANGE
     //
     // ------------------------------------------------------------------
+
     /**
      * Given value should match one of the values in the array
      *
      * @var array of choices to match to
      */
     public $choice;
+
     /**
      * If the type is string it will set the lower limit for length
      * else will specify the lower limit for the value
      *
-     * @var number minimum value
+     * @var number Minimum value
      */
     public $min;
+
     /**
      * If the type is string it will set the upper limit limit for length
      * else will specify the upper limit for the value
      *
-     * @var number maximum value
+     * @var number Maximum value
      */
     public $max;
 
@@ -127,10 +131,9 @@ class ValidationInfo
     // REGEX VALIDATION
     //
     // ------------------------------------------------------------------
+
     /**
-     * RegEx pattern to match the value
-     *
-     * @var string regular expression
+     * @var string RegEx pattern to match the value
      */
     public $pattern;
 
@@ -139,11 +142,12 @@ class ValidationInfo
     // CUSTOM VALIDATION
     //
     // ------------------------------------------------------------------
+
     /**
      * Rules specified for the parameter in the php doc comment.
      * It is passed to the validation method as the second parameter
      *
-     * @var array custom rule set
+     * @var array Custom rule set
      */
     public $rules;
 
@@ -151,7 +155,7 @@ class ValidationInfo
      * Specifying a custom error message will override the standard error
      * message return by the validator class
      *
-     * @var string custom error response
+     * @var string Custom error response
      */
     public $message;
 

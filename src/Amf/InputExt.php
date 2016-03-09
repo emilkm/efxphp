@@ -71,6 +71,7 @@ class InputExt extends AbstractInput
      * a header value or a message body.
      *
      * @return mixed
+     *
      * @throws ClassNotFoundException, IOException when reading object process failed
      */
     public function readObject()
@@ -83,6 +84,7 @@ class InputExt extends AbstractInput
     /**
      * @param mixed $event The AMFEvent
      * @param mixed $arg
+     *
      * @return {\DateTime|Types\ByteArray|\SimpleXMLElement|\stdClass|mixed}
      */
     private function decodeCallback($event, $arg)
