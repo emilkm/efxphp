@@ -84,6 +84,7 @@ class PhpServer
      *
      * @param bool $stopOnShutdown Stop the server when script exection completes
      * @param int  $pauseDuration  Pause for a number of seconds after starting the server
+     *
      * @return int|false The process ID of the PHP server
      */
     public function start($stopOnShutdown = true, $pauseDuration = 1)

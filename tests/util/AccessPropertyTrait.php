@@ -25,7 +25,8 @@ trait AccessPropertyTrait
      *
      * @return mixed Property value.
      */
-    public function getPropertyValue(&$object, $propertyName) {
+    public function getPropertyValue(&$object, $propertyName)
+    {
         $reflection = new \ReflectionClass(get_class($object));
         $property = $reflection->getProperty($propertyName);
         $property->setAccessible(true);

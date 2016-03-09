@@ -26,7 +26,8 @@ trait InvokeMethodTrait
      *
      * @return mixed Method return value.
      */
-    public function invokeMethod(&$object, $methodName, array $parameters = array()) {
+    public function invokeMethod(&$object, $methodName, array $parameters = array())
+    {
         $reflection = new \ReflectionClass(get_class($object));
         $method = $reflection->getMethod($methodName);
         $method->setAccessible(true);

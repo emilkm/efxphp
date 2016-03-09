@@ -17,6 +17,13 @@ namespace emilkm\tests\util;
  */
 trait SendToJamfTrait
 {
+    /**
+     * Sends AMF data to a server. Used for library development purposes only.
+     * If Apache BlazeDS implementation of AMF understands us,
+     * then we are speaking AMF correctly.
+     *
+     * @param mixed $data
+     */
     public function sendToJamf($data)
     {
         $headers = array(

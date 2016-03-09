@@ -18,17 +18,17 @@ namespace emilkm\tests\util;
 trait Utf8ToUnicodeTrait
 {
     /**
-     * Takes an UTF-8 string and returns an array of ints representing the
-     * Unicode characters. Astral planes are supported ie. the ints in the
-     * output can be > 0xFFFF. Occurrances of the BOM are ignored. Surrogates
-     * are not allowed.
+     * @param string $str An UTF-8 string and returns an array of ints
+     * representing the Unicode characters. Astral planes are supported ie.
+     * the ints in the output can be > 0xFFFF.
+     * Occurrances of the BOM are ignored. Surrogates are not allowed.
      *
-     * Returns false if the input string isn't a valid UTF-8 octet sequence.
+     * @return bool false if the input string isn't a valid UTF-8 octet sequence.
      */
     public function utf8ToUnicode(&$str)
     {
         $mState = 0;     // cached expected number of octets after the current octet
-                       // until the beginning of the next UTF8 character sequence
+                         // until the beginning of the next UTF8 character sequence
         $mUcs4  = 0;     // cached Unicode character
         $mBytes = 1;     // cached expected number of octets in the current sequence
 
