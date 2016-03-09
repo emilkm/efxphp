@@ -97,7 +97,7 @@ $s");
     {
         $file = $this->_file($name);
         if (file_exists($file)) {
-            include($file);
+            return include($file);
         }
     }
 
