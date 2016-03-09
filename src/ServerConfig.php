@@ -45,6 +45,8 @@ class ServerConfig extends AbstractConfig
     protected $servicesRootDirectory;
 
     /**
+     * Used by the Router to find the service class based on the message source.
+     * 
      * false = no namespacing | '' = namespace as is | 'root' = root\as is
      *
      * @var string

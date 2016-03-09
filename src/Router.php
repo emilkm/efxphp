@@ -39,6 +39,11 @@ class Router
      */
     protected $commentParser;
 
+    /**
+     * false = no namespacing | '' = namespace as is | 'root' = root\as is
+     *
+     * @var string
+     */
     protected $servicesRootNamespace;
 
     /**
