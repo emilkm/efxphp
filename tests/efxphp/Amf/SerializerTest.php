@@ -23,7 +23,7 @@ use emilkm\efxphp\Amf\Messages\RemotingMessage;
 
 /**
  * @author     Emil Malinov
- * @package    efxphp-amf
+ * @package    efxphp
  * @subpackage tests
  */
 class SerializerTest extends \PHPUnit_Framework_TestCase

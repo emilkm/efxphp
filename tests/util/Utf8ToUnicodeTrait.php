@@ -12,7 +12,7 @@ namespace emilkm\tests\util;
 
 /**
  * @author     Emil Malinov
- * @package    efxphp-amf
+ * @package    efxphp
  * @subpackage tests
  */
 trait Utf8ToUnicodeTrait
