@@ -58,7 +58,7 @@ class ValidationInfo
     public $required;
 
     /**
-     * @var string Body, header or query where this parameter is coming from
+     * @var string Body, header, or query where this parameter is coming from
      * in the http request
      */
     public $from;

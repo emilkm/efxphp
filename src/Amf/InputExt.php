@@ -72,7 +72,7 @@ class InputExt extends AbstractInput
      *
      * @return mixed
      *
-     * @throws ClassNotFoundException, IOException when reading object process failed
+     * @throws Exception
      */
     public function readObject()
     {

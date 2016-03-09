@@ -74,7 +74,7 @@ class Input extends AbstractInput
      *
      * @return mixed
      *
-     * @throws ClassNotFoundException, IOException when reading object process failed
+     * @throws Exception
      */
     public function readObject()
     {
@@ -94,7 +94,7 @@ class Input extends AbstractInput
     /**
      * @param mixed $type The value AMF0 type
      *
-     * @return mixed The php version of the data in the Packet block
+     * @return mixed The PHP version of the data in the Packet block
      */
     protected function readAmf0ObjectValue($type)
     {
