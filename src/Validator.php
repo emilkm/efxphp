@@ -28,7 +28,7 @@ class Validator
      *
      * @return string
      *
-     * @throws ValidationException
+     * @throws Exception
      */
     public function tel($input, ValidationInfo $info = null)
     {
@@ -51,7 +51,7 @@ class Validator
      *
      * @return string
      *
-     * @throws ValidationException
+     * @throws Exception
      */
     public function email($input, ValidationInfo $info = null)
     {
@@ -72,7 +72,7 @@ class Validator
      *
      * @return string
      *
-     * @throws ValidationException
+     * @throws Exception
      */
     public function date($input, ValidationInfo $info = null)
     {
@@ -100,7 +100,7 @@ class Validator
      *
      * @return string
      *
-     * @throws ValidationException
+     * @throws Exception
      */
     public function datetime($input, ValidationInfo $info = null)
     {
@@ -130,7 +130,7 @@ class Validator
      *
      * @return string
      *
-     * @throws ValidationException
+     * @throws Exception
      */
     public function time24($input, ValidationInfo $info = null)
     {
@@ -147,7 +147,7 @@ class Validator
      *
      * @return string
      *
-     * @throws ValidationException
+     * @throws Exception
      */
     public function time($input, ValidationInfo $info = null)
     {
@@ -170,7 +170,7 @@ class Validator
      *
      * @return string
      *
-     * @throws ValidationException
+     * @throws Exception
      */
     public function time12($input, ValidationInfo $info = null)
     {
@@ -195,7 +195,7 @@ class Validator
      *
      * @return int
      *
-     * @throws ValidationException
+     * @throws Exception
      */
     public function timestamp($input, ValidationInfo $info = null)
     {

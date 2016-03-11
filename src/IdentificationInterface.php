@@ -18,6 +18,7 @@ interface IdentificationInterface
 {
     /**
      * @abstract
+     *
      * @param string $clientId
      * @param string $sessionId
      *
@@ -27,6 +28,7 @@ interface IdentificationInterface
 
     /**
      * @abstract
+     *
      * @return bool
      */
     public function isAuthenticated();

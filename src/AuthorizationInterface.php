@@ -22,8 +22,12 @@ interface AuthorizationInterface
      * API access will be denied when this method returns false
      *
      * @abstract
+     *
+     * @param string $serviceName
+     * @param string $methodName
+     * @param string $requiredAccess
+     *
      * @return bool true when api access is allowed, false otherwise
      */
     public function authorize($serviceName, $methodName, $requiredAccess);
 }
-
