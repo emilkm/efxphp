@@ -27,7 +27,7 @@ interface AuthorizationInterface
      * @param string $methodName
      * @param string $requiredAccess
      *
-     * @return bool true when api access is allowed, false otherwise
+     * @return bool True when service method access is allowed, false otherwise
      */
     public function authorize($serviceName, $methodName, $requiredAccess);
 }

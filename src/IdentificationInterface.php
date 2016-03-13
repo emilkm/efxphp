@@ -17,12 +17,16 @@ namespace emilkm\efxphp;
 interface IdentificationInterface
 {
     /**
+     * The implementation of this interface may indetify and establish
+     * a client session. If the API is public and no sessions
+     * are needed, simply do nothing.
+     *
      * @abstract
      *
-     * @param string $clientId
-     * @param string $sessionId
+     * @param string $clientId The request message header DSId
+     * @param string $sessionId The request message header sID
      *
-     * @throws Exception
+     * @throws Exception when the client and/or session could not be identified
      */
     public function identify($clientId, $sessionId);
 
