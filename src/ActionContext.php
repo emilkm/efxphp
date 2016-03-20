@@ -18,7 +18,7 @@ class ActionContext
     /**
      * True if requestMessage contains a CommandMessage
      *
-     * @var mixed
+     * @var bool
      */
     public $requestIsCommand = false;
 

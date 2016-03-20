@@ -47,17 +47,23 @@ class Client
      */
     private $serializer = null;
 
+    private $sequence = 0;
+
+    private $response = null;
+
+    private $sidPropagation = 'header'; // header or query
+
+    public $clientId = null;
     public $sessionId = null;
     public $remoteLogin = null;
 
-    public $requestTimeout = self::REQUEST_TIMEOUT; //30 seconds
+    public $requestTimeout = self::REQUEST_TIMEOUT;
     public $messageQueue = array();
-    public $clientId = null;
-    private $sequence = 0;
+
     public $destination = '';
     public $endpoint = '';
-    public $headers = null;
-    private $response = null;
+    public $headers = array();
+
 
     /**
      * @param Deserializer $deserializer
@@ -100,6 +106,30 @@ class Client
     }
 
     /**
+     * 'header' = through AMF RemoteMessage header sID, 'query' = through query string sID
+     *
+     * @param string $value
+     */
+    public function setSidPropagation($value)
+    {
+        if ($value != 'header' && $value != 'query') {
+            throw new Exception("sidPropagation: 'header' = through AMF RemoteMessage header sID, 'query' = through query string sID");
+        }
+        $this->sidPropagation = $value;
+    }
+
+    public function setSessionId($sessionId)
+    {
+        $this->sessionId = $sessionId;
+
+        if ($this->sidPropagation == 'header')  {
+            $this->headers['sID'] = $this->sessionId;
+        } else {
+            $this->endpoint .= '?sID=' . $this->sessionId;
+        }
+    }
+
+    /**
      * @param callable $onResult
      * @param callable $onStatus
      */
@@ -109,7 +139,7 @@ class Client
             throw new Exception('onStatus and onResult must be callable');
         }*/
         if ($this->clientId == null && $this->sequence == 0 && count($this->messageQueue) == 0) {
-            $this->messageQueue[] = new PendingRequest('command', 'ping', array(null), $onResult, $onStatus);
+            $this->messageQueue[] = new PendingRequest('command', 'ping', array(), $onResult, $onStatus, 'command.ping');
             $this->processQueue();
         }
     }
@@ -120,15 +150,16 @@ class Client
      * @param array    $params
      * @param callable $onResult
      * @param callable $onStatus
+     * @param mixed    $token
      */
-    public function invoke($source, $operation, $params, callable $onResult, callable $onStatus)
+    public function invoke($source, $operation, $params, callable $onResult, callable $onStatus, $token = null)
     {
         /*if (!is_callable($onStatus) || !is_callable($onResult)) {
             throw new Exception('onStatus and onResult must be callable');
         }*/
         $params = $this->safeParams($params);
         if ($this->clientId == null && $this->sequence == 0 && count($this->messageQueue) == 0) {
-            $this->messageQueue[] = new PendingRequest('command', 'ping', array(null), $onResult, $onStatus);
+            $this->messageQueue[] = new PendingRequest('command', 'ping', array(), $onResult, $onStatus, 'command.ping');
             if ($this->remoteLogin != null) {
                 $this->messageQueue[] = new PendingRequest(
                     $this->remoteLogin->service,
@@ -137,14 +168,15 @@ class Client
                        array($this->remoteLogin->clientBuild, $this->remoteLogin->password),
                     ),
                     $onResult,
-                    $onStatus
+                    $onStatus,
+                    'remote.login'
                 );
             }
-            $this->messageQueue[] = new PendingRequest($source, $operation, $params, $onResult, $onStatus);
+            $this->messageQueue[] = new PendingRequest($source, $operation, $params, $onResult, $onStatus, $token);
             $this->processQueue();
             return;
         }
-        $this->messageQueue[] = new PendingRequest($source, $operation, $params, $onResult, $onStatus);
+        $this->messageQueue[] = new PendingRequest($source, $operation, $params, $onResult, $onStatus, $token);
         if ($this->clientId == null || ($this->sessionId == null && $this->remoteLogin != null)) {
             return;
         }
@@ -187,12 +219,9 @@ class Client
                 $pendingRequest->params
             );
 
-            /*for ($i = 0; $i < count($headers); $i++) {
-                $header = $this->headers[$i];
-                foreach ($headerName header) {
-                    $message->headers[$headerName] = $header[$headerName];
-                }
-            }*/
+            foreach ($this->headers as $key => $value) {
+                $message->headers->$key = $value;
+            }
         }
 
         $messageBody->data[0] = $message;
@@ -210,6 +239,7 @@ class Client
             'error' => false,
             'headers' => array(),
             'data' => null,
+            'token' => $pendingRequest->token
         );
 
         // Basic setup
@@ -260,7 +290,7 @@ class Client
 
 
         if ($this->response->error !== false) {
-            call_user_func_array($pendingRequest->onStatus, array($this->response->error));
+            call_user_func_array($pendingRequest->onStatus, array($this->response->error, $this->response->token));
             return;
         } elseif ($this->response->status != 200) {
             $this->response->error = (object) array(
@@ -268,7 +298,7 @@ class Client
                 'message' => 'HTTP status not 200.',
                 'detail' => null,
             );
-            call_user_func_array($pendingRequest->onStatus, array($this->response->error));
+            call_user_func_array($pendingRequest->onStatus, array($this->response->error, $this->response->token));
             return;
         } elseif (!isset($this->response->headers['content-type'])
             || (isset($this->response->headers['content-type']) && strpos($this->response->headers['content-type'], 'application/x-amf') === false)
@@ -278,7 +308,7 @@ class Client
                 'message' => 'Unsupported content type.',
                 'detail' => $this->response->headers['content-type'],
             );
-            call_user_func_array($pendingRequest->onStatus, array($this->response->error));
+            call_user_func_array($pendingRequest->onStatus, array($this->response->error, $this->response->token));
             return;
         }
 
@@ -290,7 +320,7 @@ class Client
                         'message' => 'Cannot decode the response data.',
                         'detail' => 'gzdecode not available.',
                     );
-                    call_user_func_array($pendingRequest->onStatus, array($this->response->error));
+                    call_user_func_array($pendingRequest->onStatus, array($this->response->error, $this->response->token));
                     return;
                 }
                 if (!($decoded = @gzdecode($this->response->data))) {
@@ -299,7 +329,7 @@ class Client
                         'message' => 'Failed to decode the response data.',
                         'detail' => 'gzdecode failed.',
                     );
-                    call_user_func_array($pendingRequest->onStatus, array($this->response->error));
+                    call_user_func_array($pendingRequest->onStatus, array($this->response->error, $this->response->token));
                     return;
                 }
             } elseif (strtolower($this->response->headers['content-encoding']) == 'deflate') {
@@ -309,7 +339,7 @@ class Client
                         'message' => 'Cannot decode the response data.',
                         'detail' => 'gzinflate not available.',
                     );
-                    call_user_func_array($pendingRequest->onStatus, array($this->response->error));
+                    call_user_func_array($pendingRequest->onStatus, array($this->response->error, $this->response->token));
                     return;
                 }
                 if (!($decoded = @gzinflate($this->response->data))) {
@@ -318,7 +348,7 @@ class Client
                         'message' => 'Failed to decode the response data.',
                         'detail' => 'gzinflate failed.',
                     );
-                    call_user_func_array($pendingRequest->onStatus, array($this->response->error));
+                    call_user_func_array($pendingRequest->onStatus, array($this->response->error, $this->response->token));
                     return;
                 }
             }
@@ -333,7 +363,7 @@ class Client
                 'message' => 'Failed to deserialize response data.',
                 'detail' => $e->getMessage(),
             );
-            call_user_func_array($pendingRequest->onStatus, array($this->response->error));
+            call_user_func_array($pendingRequest->onStatus, array($this->response->error, $this->response->token));
             return;
         }
 
@@ -345,7 +375,7 @@ class Client
                 'message' => 'Malformed AMF packet.',
                 'detail' => 'Missing AMF body.',
             );
-            call_user_func_array($pendingRequest->onStatus, array($this->response->error));
+            call_user_func_array($pendingRequest->onStatus, array($this->response->error, $this->response->token));
             return;
         }
 
@@ -359,7 +389,7 @@ class Client
                 'message' => 'Malformed AMF packet.',
                 'detail' => 'Unsupported AMF message type.',
             );
-            call_user_func_array($pendingRequest->onStatus, array($this->response->error));
+            call_user_func_array($pendingRequest->onStatus, array($this->response->error, $this->response->token));
             return;
         }
 
@@ -369,7 +399,7 @@ class Client
                 'message' => 'Malformed AMF packet.',
                 'detail' => 'Unexpected AMF message type.',
             );
-            call_user_func_array($pendingRequest->onStatus, array($this->response->error));
+            call_user_func_array($pendingRequest->onStatus, array($this->response->error, $this->response->token));
             return;
         }
 
@@ -379,7 +409,7 @@ class Client
                 'message' => $responseMessage->faultString,
                 'detail' => $responseMessage->faultDetail,
             );
-            call_user_func_array($pendingRequest->onStatus, array($this->response->error));
+            call_user_func_array($pendingRequest->onStatus, array($this->response->error, $this->response->token));
             return;
         }
 
@@ -392,28 +422,22 @@ class Client
                 'message' => $responseMessage->body->message,
                 'detail' => $responseMessage->body->detail,
             );
-            call_user_func_array($pendingRequest->onStatus, array($this->response->error));
+            call_user_func_array($pendingRequest->onStatus, array($this->response->error, $this->response->token));
         } else {
             if ($responseBody->targetURI == '/2/onResult' && $this->remoteLogin != null) {
                 $this->setSessionId($responseMessage->body->data);
                 $this->processQueue();
             } else {
-                call_user_func_array($pendingRequest->onResult, array($responseMessage->body));
+                call_user_func_array($pendingRequest->onResult, array($responseMessage->body, $this->response->token));
                 $this->processQueue();
             }
         }
     }
 
-    private function setSessionId($sessionId)
-    {
-        $this->sessionId = $sessionId;
-        $this->endpoint .= '?sid=' . $this->sessionId;
-    }
-
     private function safeParams($params)
     {
         if (is_null($params)) {
-            $params = array(null);
+            $params = array();
         } elseif (!is_array($params)) {
             $params = array($params);
         }
@@ -486,6 +510,7 @@ class PendingRequest
     public $params;
     public $onResult;
     public $onStatus;
+    public $token;
 
     /**
      * @param string   $source
@@ -494,12 +519,13 @@ class PendingRequest
      * @param callable $onResult
      * @param callable $onStatus
      */
-    public function __construct($source, $operation, $params, $onResult, $onStatus)
+    public function __construct($source, $operation, $params, $onResult, $onStatus, $token = null)
     {
         $this->source = $source;
         $this->operation = $operation;
         $this->params = $params;
         $this->onResult = $onResult;
         $this->onStatus = $onStatus;
+        $this->token = $token;
     }
 }

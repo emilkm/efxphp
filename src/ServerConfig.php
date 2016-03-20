@@ -25,7 +25,7 @@ namespace emilkm\efxphp;
  * @property bool $crossOriginResourceSharing
  * @property string $accessControlAllowOrigin
  * @property bool $contentEncodingEnabled
- * @property string $preferContentEncoding
+ * @property string $sidPropagation
  */
 class ServerConfig extends AbstractConfig
 {
@@ -59,6 +59,13 @@ class ServerConfig extends AbstractConfig
      * in the same folder as index.php (gateway)
      */
     protected $cacheDirectory;
+
+    /**
+     * 'header' = through AMF RemoteMessage header sID | 'query' = through query string sID
+     *
+     * @var string
+     */
+    protected $sidPropagation = 'header';
 
     // ==================================================================
     //

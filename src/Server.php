@@ -226,8 +226,14 @@ class Server
                 break;
             }
             $clientId = $requestMessage->headers->DSId;
-            if (isset($requestMessage->headers->sID)) {
-                $sessionId = $requestMessage->headers->sID;
+            if ($this->config->sidPropagation == 'header') {
+                if (isset($requestMessage->headers->sID)) {
+                    $sessionId = $requestMessage->headers->sID;
+                }
+            } else {
+                if (isset($_REQUEST['sID'])) {
+                    $sessionId = $_REQUEST['sID'];
+                }
             }
         }
 
