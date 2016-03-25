@@ -186,7 +186,7 @@ class Client
             return;
         }
         $this->messageQueue[] = new Request($source, $operation, $params, $onResult, $onStatus, $token, $holdQueue);
-        if ($this->clientId == null || ($this->sessionId == null && $this->remoteLogin != null)) {
+        if ($this->clientId == null || ($this->request != null && $this->request->holdQueue)) {
             return;
         }
         $this->processQueue();
@@ -196,7 +196,7 @@ class Client
     {
         while (count($this->messageQueue) > 0) {
             $this->request = array_shift($this->messageQueue);
-            if ($this->sequence == 1 || $this->request->holdQueue) {
+            if ($this->sequence == 1 || ($this->request != null && $this->request->holdQueue)) {
                 $this->send($this->request);
                 return;
             } else {
