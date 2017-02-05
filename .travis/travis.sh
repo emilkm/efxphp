@@ -1,11 +1,11 @@
 #!/bin/bash
 
+EFXPHP_BASE=$(pwd)
+
 # PHP Settings
 PHP_BASE="php-$PHP_VERSION"
 PHP_PACKAGE="php-$PHP_VERSION.tar.gz"
 PHP_URL="http://us1.php.net/get/$PHP_PACKAGE/from/this/mirror"
-
-
 
 # Move out of project 
 cd ../
@@ -16,7 +16,7 @@ tar -xf $PHP_PACKAGE
 
 # Get AMFEXT
 git clone --depth 1 https://github.com/emilkm/amfext.git amfext
-mv /amfext $PHP_BASE/ext/amf
+mv amfext $PHP_BASE/ext/amf
 
 
 # Build PHP
@@ -31,3 +31,5 @@ export TEST_PHP_EXECUTABLE=sapi/cli/php
 export NO_INTERACTION=1
 sapi/cli/php run-tests.php ext/amf  
 
+cd $EFXPHP_BASE
+$PHP_BASE/sapi/cli/php phpunit --configuration test/phpunit.xml
