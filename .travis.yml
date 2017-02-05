@@ -1,0 +1,12 @@
+dist: trusty
+
+language: PHP
+
+env:
+    - PHP_VERSION=7.1.1
+
+matrix:
+    fast_finish: true
+
+script:
+    - ./.travis/travis.sh
