@@ -90,11 +90,11 @@ class InputExt extends AbstractInput
     private function decodeCallback($event, $arg)
     {
         switch ($event) {
-            case self::AMFE_MAP:
+            case 1: //self::AMFE_MAP:
                 return $this->resolveType($arg);
-            case self::AMFE_POST_OBJECT:
+            case 2: //self::AMFE_POST_OBJECT:
                 return $arg;
-            case self::AMFE_POST_DATE:
+            case 7: //self::AMFE_POST_DATE:
                 if ($this->useInternalDateType == true) {
                     $value = new Date($arg);
                 } else {
@@ -106,7 +106,7 @@ class InputExt extends AbstractInput
                 }
 
                 return $value;
-            case self::AMFE_POST_XML:
+            case 3: //self::AMFE_POST_XML:
                 if ($this->useInternalXmlType == true) {
                     $value = new Xml($arg);
                 } else {
@@ -114,7 +114,7 @@ class InputExt extends AbstractInput
                 }
 
                 return $value;
-            case self::AMFE_POST_XMLDOCUMENT:
+            case 8: //self::AMFE_POST_XMLDOCUMENT:
                 if ($this->useInternalXmlDocumentType == true) {
                     $value = new XmlDocument($arg);
                 } else {
@@ -122,7 +122,7 @@ class InputExt extends AbstractInput
                 }
 
                 return $value;
-            case self::AMFE_MAP_EXTERNALIZABLE:
+            case 4: //self::AMFE_MAP_EXTERNALIZABLE:
                 if ($arg == 'flex.messaging.io.ArrayCollection' || $arg == 'flex.messaging.io.ObjectProxy') {
                     //returning NULL means that the externalized data is used directly. For example an array collection will not be deserialized
                     //as an array collection with an _externalizedData field containing the source array. Rather it will be deserialized directly as the source array
@@ -135,15 +135,15 @@ class InputExt extends AbstractInput
                     return 'error';
                 }
                 break;
-            case self::AMFE_POST_BYTEARRAY:
+            case 5: //self::AMFE_POST_BYTEARRAY:
                 return new ByteArray($arg);
-            case self::AMFE_VECTOR_INT:
+            case 9: //self::AMFE_VECTOR_INT:
                 return new Vector(Constants::AMF3_VECTOR_INT, $arg);
-            case self::AMFE_VECTOR_UINT:
+            case 10: //self::AMFE_VECTOR_UINT:
                 return new Vector(Constants::AMF3_VECTOR_UINT, $arg);
-            case self::AMFE_VECTOR_DOUBLE:
+            case 11: //self::AMFE_VECTOR_DOUBLE:
                 return new Vector(Constants::AMF3_VECTOR_DOUBLE, $arg);
-            case self::AMFE_VECTOR_OBJECT:
+            case 12: //self::AMFE_VECTOR_OBJECT:
                 return new Vector(Constants::AMF3_VECTOR_OBJECT, $arg);
             default:
                 throw new Exception('invalid event in decode callback : ' . $event);

@@ -280,9 +280,9 @@ class OutputExtTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     *
+     * The pure anonymous case.
      */
-    public function testwriteAmf0ObjectStdClassRemoteClassFieldNotSetToAnonymous()
+    public function testwriteAmf0ObjectAnonymous()
     {
         $this->out->setAvmPlus(false);
         $obj = new stdClass();
@@ -294,9 +294,9 @@ class OutputExtTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     *
+     * Anonymous object with blank _explicitType field, do not write the _explicitType field.
      */
-    public function testwriteAmf0ObjectStdClassRemoteClassFieldBlankToAnonymous()
+    public function testwriteAmf0ObjectAnonymousFromBlankExplicitType()
     {
         $this->out->setAvmPlus(false);
         $obj = new stdClass();
@@ -308,11 +308,28 @@ class OutputExtTest extends \PHPUnit_Framework_TestCase
         $data = unserialize(file_get_contents(__DIR__ . '/../../asset/value/object-anonymous.amf0'));
         $this->assertEquals($data, $this->out->data);
     }
+    
+    /**
+     * Typed object with blank _explicitType field, do not write the _explicitType field.
+     * There is a conflict between the object type and the _explicitType. Since _explicitType takes precedence,
+     * output an anonymous object.
+     */
+    public function testwriteAmf0ObjectAnonymousFromTypeConflict()
+    {
+        $this->out->setAvmPlus(false);
+        $obj = new \emilkm\tests\asset\value\VoExplicitTypeBlank();
+        $this->out->writeObject($obj);
+        //$this->sendToJamf($this->out->data);
+        //file_put_contents(__DIR__ . '/../asset/value/object-anonymous.amf0', serialize($this->out->data));
+        $data = unserialize(file_get_contents(__DIR__ . '/../../asset/value/object-anonymous.amf0'));
+        $this->assertEquals($data, $this->out->data);
+    }
 
     /**
-     *
+     * When the type cannot be resolved, simply write stdClass and set the _explicitType field.
+     * Do not write an anonymous object, because the remote client may be able to resolve it.
      */
-    public function testwriteAmf0ObjectStdClassRemoteClassFieldSetToTypedFromField()
+    public function testwriteAmf0ObjectTypedNotResolvableToStdClass()
     {
         $this->out->setAvmPlus(false);
         $obj = new stdClass();
@@ -324,11 +341,13 @@ class OutputExtTest extends \PHPUnit_Framework_TestCase
         $data = unserialize(file_get_contents(__DIR__ . '/../../asset/value/object-typed-someclass.amf0'));
         $this->assertEquals($data, $this->out->data);
     }
+    
+    
 
     /**
      *
      */
-    public function testwriteAmf0ObjectDefClassRemoteClassFieldNotSetToTypedFromNamespace()
+    public function testwriteAmf0ObjectTypedFromNamespace()
     {
         $this->out->setAvmPlus(false);
         $obj = new \emilkm\tests\asset\value\VoExplicitTypeNotSet();
@@ -342,21 +361,7 @@ class OutputExtTest extends \PHPUnit_Framework_TestCase
     /**
      *
      */
-    public function testwriteAmf0ObjectDefClassRemoteClassFieldBlankToAnonymous()
-    {
-        $this->out->setAvmPlus(false);
-        $obj = new \emilkm\tests\asset\value\VoExplicitTypeBlank();
-        $this->out->writeObject($obj);
-        //$this->sendToJamf($this->out->data);
-        //file_put_contents(__DIR__ . '/../asset/value/object-anonymous.amf0', serialize($this->out->data));
-        $data = unserialize(file_get_contents(__DIR__ . '/../../asset/value/object-anonymous.amf0'));
-        $this->assertEquals($data, $this->out->data);
-    }
-
-    /**
-     *
-     */
-    public function testwriteAmf0ObjectDefClassRemoteClassFieldNotBlankToTypedFromField()
+    public function testwriteAmf0ObjectTypedFromField()
     {
         $this->out->setAvmPlus(false);
         $obj = new \emilkm\tests\asset\value\VoExplicitTypeNotBlank();
@@ -370,7 +375,7 @@ class OutputExtTest extends \PHPUnit_Framework_TestCase
     /**
      *
      */
-    public function testwriteAmf0XmlDocumentFromEfxphpXml()
+    public function testwriteAmf0XmlFromEfxphpXml()
     {
         $this->out->setAvmPlus(false);
         $obj = new stdClass();
@@ -385,7 +390,7 @@ class OutputExtTest extends \PHPUnit_Framework_TestCase
     /**
      *
      */
-    public function testwriteAmf0XmlDocumentFromSimpleXMLElement()
+    public function testwriteAmf0XmlFromSimpleXMLElement()
     {
         $this->out->setAvmPlus(false);
         $obj = new stdClass();
@@ -836,9 +841,9 @@ class OutputExtTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     *
+     * The pure anonymous case.
      */
-    public function testwriteAmf3ObjectStdClassRemoteClassFieldNotSetToAnonymous()
+    public function testwriteAmf3Anonymous()
     {
         $this->out->setAvmPlus(true);
         $obj = new stdClass();
@@ -850,9 +855,9 @@ class OutputExtTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     *
+     * Anonymous object with blank _explicitType field, do not write the _explicitType field.
      */
-    public function testwriteAmf3ObjectStdClassRemoteClassFieldBlankToAnonymous()
+    public function testwriteAmf3ObjectAnonymousFromBlankExplicitType()
     {
         $this->out->setAvmPlus(true);
         $obj = new stdClass();
@@ -864,11 +869,28 @@ class OutputExtTest extends \PHPUnit_Framework_TestCase
         $data = unserialize(file_get_contents(__DIR__ . '/../../asset/value/object-anonymous.amf3'));
         $this->assertEquals($data, $this->out->data);
     }
+    
+    /**
+     * Typed object with blank _explicitType field, do not write the _explicitType field.
+     * There is a conflict between the object type and the _explicitType. Since _explicitType takes precedence,
+     * output an anonymous object.
+     */
+    public function testwriteAmf3ObjectAnonymousFromTypeConflict()
+    {
+        $this->out->setAvmPlus(true);
+        $obj = new \emilkm\tests\asset\value\VoExplicitTypeBlank();
+        $this->out->writeObject($obj);
+        //$this->sendToJamf($this->out->data);
+        //file_put_contents(__DIR__ . '/../asset/value/object-anonymous.amf3', serialize($this->out->data));
+        $data = unserialize(file_get_contents(__DIR__ . '/../../asset/value/object-anonymous.amf3'));
+        $this->assertEquals($data, $this->out->data);
+    }
 
     /**
-     *
+     * When the type cannot be resolved, simply write stdClass and set the _explicitType field.
+     * Do not write an anonymous object, because the remote client may be able to resolve it.
      */
-    public function testwriteAmf3ObjectStdClassRemoteClassFieldSetToTypedFromField()
+    public function testwriteAmf3TypedToStdClass()
     {
         $this->out->setAvmPlus(true);
         $obj = new stdClass();
@@ -882,9 +904,9 @@ class OutputExtTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     *
+     * Type comes from the namespace. Do not write _explicitType, it is not needed.
      */
-    public function testwriteAmf3ObjectDefClassRemoteClassFieldNotSetToTypedFromNamespace()
+    public function testwriteAmf3ObjectTypedFromNamespace()
     {
         $this->out->setAvmPlus(true);
         $obj = new \emilkm\tests\asset\value\VoExplicitTypeNotSet();
@@ -895,24 +917,12 @@ class OutputExtTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($data, $this->out->data);
     }
 
-    /**
-     *
-     */
-    public function testwriteAmf3ObjectDefClassRemoteClassFieldBlankToAnonymous()
-    {
-        $this->out->setAvmPlus(true);
-        $obj = new \emilkm\tests\asset\value\VoExplicitTypeBlank();
-        $this->out->writeObject($obj);
-        //$this->sendToJamf($this->out->data);
-        //file_put_contents(__DIR__ . '/../asset/value/object-anonymous.amf3', serialize($this->out->data));
-        $data = unserialize(file_get_contents(__DIR__ . '/../../asset/value/object-anonymous.amf3'));
-        $this->assertEquals($data, $this->out->data);
-    }
+    
 
     /**
      *
      */
-    public function testwriteAmf3ObjectDefClassRemoteClassFieldNotBlankToTypedFromField()
+    public function testwriteAmf3ObjectTypedFromField()
     {
         $this->out->setAvmPlus(true);
         $obj = new \emilkm\tests\asset\value\VoExplicitTypeNotBlank();
@@ -926,7 +936,7 @@ class OutputExtTest extends \PHPUnit_Framework_TestCase
     /**
      *
      */
-    public function testwriteAmf3ObjectStdClassRemoteClassFieldSetToTypedFromFieldAndTraitsReference()
+    public function testwriteAmf3ObjectTypedFromFieldAndTraitsReference()
     {
         $this->out->setAvmPlus(true);
         $remoteClassField = Constants::REMOTE_CLASS_FIELD;
@@ -950,7 +960,7 @@ class OutputExtTest extends \PHPUnit_Framework_TestCase
     /**
      *
      */
-    public function testwriteAmf3ObjectStdClassRemoteClassFieldSetToTypedFromFieldAndTraitsReferenceMissingProperty()
+    public function testwriteAmf3ObjectTypedFromFieldAndTraitsReferenceMissingProperty()
     {
         $this->out->setAvmPlus(true);
         $remoteClassField = Constants::REMOTE_CLASS_FIELD;

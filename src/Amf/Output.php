@@ -99,10 +99,9 @@ class Output extends AbstractOutput
             $this->writeAmf0Number($value);
             return;
         } elseif (is_float($value)) {
-            if ($value > PHP_INT_MAX) {
-                // Using double to write big numbers such as BigInteger or
-                // BigDecimal (Java) can result in information loss so we write
-                // them as String by default...
+            if ($value > Constants::AMF_U32_MAX) {
+                // BlazeDS checks for  BigInteger or BigDecimal here. For consistency 
+                // between 64bit and 32bit PHP and C we go with AMF_U32_MAX.
                 $this->writeAmf0String($value);
             } else {
                 $this->writeAmf0Number($value);
@@ -174,7 +173,7 @@ class Output extends AbstractOutput
     protected function writeAmf0String($value)
     {
         $len = strlen($value);
-        if ($len < 65536) {
+        if ($len < Constants::AMF_U16_MAX) {
             $this->writeByte(Constants::AMF0_STRING);
             $this->writeUtf($value);
         } else {
@@ -456,7 +455,7 @@ class Output extends AbstractOutput
      */
     protected function writeAmf3Int($value)
     {
-        if (is_int($value) && $value >= Constants::INT28_MIN_VALUE && $value <= Constants::INT28_MAX_VALUE) {
+        if (is_int($value) && $value >= Constants::AMF3_INT28_MIN && $value <= Constants::AMF3_INT28_MAX) {
             $this->data .= "\4";
             $this->writeAmf3UInt29($value);
         } else {

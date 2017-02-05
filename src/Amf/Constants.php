@@ -79,11 +79,12 @@ class Constants
 
     const UNKNOWN_CONTENT_LENGTH    = 1;
 
-    const UINT29_MASK               = 536870911;
-    const INT28_MAX_VALUE           = 268435455;
-    const INT28_MIN_VALUE           = -268435456;
-    const UINT_MAX_VALUE            = 4294967295;
-    const UINT_MIN_VALUE            = 0;
+    const AMF_U8_MAX                = 255;
+    const AMF_U16_MAX               = 65535;
+    const AMF_U32_MAX               = 4294967295;
+    const AMF3_INT28_MAX            = 268435455;
+    const AMF3_INT28_MIN            = -268435456;
+    const AMF3_UINT29_MAX           = 536870911;
 
     const MAX_STORED_OBJECTS        = 1024;
 }

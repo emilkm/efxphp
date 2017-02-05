@@ -176,7 +176,7 @@ class DeserializerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('3182A13C-AF4A-A148-AA73-000028716D94', $message->bodies[0]->data->headers->DSId);
         $this->assertEquals('B1510529-D1A0-6A62-25DA-A00B1BF47BF6', $message->bodies[0]->data->messageId);
         $this->assertEquals('63FCE70D-F447-ED49-83E6-00001695D4AF', $message->bodies[0]->data->correlationId);
-        $this->assertEquals('1437179933789', $message->bodies[0]->data->timestamp);
+        $this->assertEquals('1437179933687', $message->bodies[0]->data->timestamp);
     }
 
     /**
@@ -193,7 +193,7 @@ class DeserializerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('3182A13C-AF4A-A148-AA73-000028716D94', $message->bodies[0]->data->headers->DSId);
         $this->assertEquals('B1510529-D1A0-6A62-25DA-A00B1BF47BF6', $message->bodies[0]->data->messageId);
         $this->assertEquals('63FCE70D-F447-ED49-83E6-00001695D4AF', $message->bodies[0]->data->correlationId);
-        $this->assertEquals('1437179933789', $message->bodies[0]->data->timestamp);
+        $this->assertEquals('1437179933687', $message->bodies[0]->data->timestamp);
     }
 
     /**
@@ -210,7 +210,7 @@ class DeserializerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('3182A13C-AF4A-A148-AA73-000028716D94', $message->bodies[0]->data->headers->DSId);
         $this->assertEquals('B1510529-D1A0-6A62-25DA-A00B1BF47BF6', $message->bodies[0]->data->messageId);
         $this->assertEquals('63FCE70D-F447-ED49-83E6-00001695D4AF', $message->bodies[0]->data->correlationId);
-        $this->assertEquals('1437179933789', $message->bodies[0]->data->timestamp);
+        $this->assertEquals('1437179933687', $message->bodies[0]->data->timestamp);
     }
 
     /**
@@ -227,6 +227,6 @@ class DeserializerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('3182A13C-AF4A-A148-AA73-000028716D94', $message->bodies[0]->data->headers->DSId);
         $this->assertEquals('B1510529-D1A0-6A62-25DA-A00B1BF47BF6', $message->bodies[0]->data->messageId);
         $this->assertEquals('63FCE70D-F447-ED49-83E6-00001695D4AF', $message->bodies[0]->data->correlationId);
-        $this->assertEquals('1437179933789', $message->bodies[0]->data->timestamp);
+        $this->assertEquals('1437179933687', $message->bodies[0]->data->timestamp);
     }
 }

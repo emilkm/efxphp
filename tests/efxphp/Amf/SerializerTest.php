@@ -41,7 +41,7 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
         $this->serializer = new Serializer(new Output());
         $this->serializerExt = new Serializer(new OutputExt());
     }
-
+    
     /**
      *
      */
@@ -53,7 +53,7 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
 
         //reset properties manually so we can compare output
         $commandMessage->messageId = '63FCE70D-F447-ED49-83E6-00001695D4AF';
-        $commandMessage->timestamp = 1437179933687;
+        $commandMessage->timestamp = round(1437179933687);
 
         $messageBody->data = $commandMessage;
         $actionMessage->bodies[0] = $messageBody;
@@ -63,7 +63,7 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
         $data = unserialize(file_get_contents(__DIR__ . '/../../asset/value/ping-command.amf0'));
         $this->assertEquals($data, $mesg);
     }
-
+    
     /**
      *
      */
@@ -75,7 +75,7 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
 
         //reset properties manually so we can compare output
         $commandMessage->messageId = '63FCE70D-F447-ED49-83E6-00001695D4AF';
-        $commandMessage->timestamp = 1437179933687;
+        $commandMessage->timestamp = round(1437179933687);
 
         $messageBody->data = $commandMessage;
         $actionMessage->bodies[0] = $messageBody;
@@ -97,7 +97,7 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
 
         //reset properties manually so we can compare output
         $commandMessage->messageId = '63FCE70D-F447-ED49-83E6-00001695D4AF';
-        $commandMessage->timestamp = 1437179933687;
+        $commandMessage->timestamp = round(1437179933687);
 
         $messageBody->data = $commandMessage;
         $actionMessage->bodies[0] = $messageBody;
@@ -119,7 +119,7 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
 
         //reset properties manually so we can compare output
         $commandMessage->messageId = '63FCE70D-F447-ED49-83E6-00001695D4AF';
-        $commandMessage->timestamp = 1437179933687;
+        $commandMessage->timestamp = round(1437179933687);
 
         $messageBody->data = $commandMessage;
         $actionMessage->bodies[0] = $messageBody;
@@ -147,7 +147,7 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
 
         //reset properties manually so we can compare output
         $remotingMessage->messageId = '63FCE70D-F447-ED49-83E6-00001695D4AF';
-        $remotingMessage->timestamp = 1437179933687;
+        $remotingMessage->timestamp = round(1437179933687);
 
         $messageBody->data = $remotingMessage;
         $actionMessage->bodies[0] = $messageBody;
@@ -175,7 +175,7 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
 
         //reset properties manually so we can compare output
         $remotingMessage->messageId = '63FCE70D-F447-ED49-83E6-00001695D4AF';
-        $remotingMessage->timestamp = 1437179933687;
+        $remotingMessage->timestamp = round(1437179933687);
 
         $messageBody->data = $remotingMessage;
         $actionMessage->bodies[0] = $messageBody;
@@ -203,7 +203,7 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
 
         //reset properties manually so we can compare output
         $remotingMessage->messageId = '63FCE70D-F447-ED49-83E6-00001695D4AF';
-        $remotingMessage->timestamp = 1437179933687;
+        $remotingMessage->timestamp = round(1437179933687);
 
         $messageBody->data = $remotingMessage;
         $actionMessage->bodies[0] = $messageBody;
@@ -231,7 +231,7 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
 
         //reset properties manually so we can compare output
         $remotingMessage->messageId = '63FCE70D-F447-ED49-83E6-00001695D4AF';
-        $remotingMessage->timestamp = 1437179933687;
+        $remotingMessage->timestamp = round(1437179933687);
 
         $messageBody->data = $remotingMessage;
         $actionMessage->bodies[0] = $messageBody;
@@ -241,7 +241,8 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
         $data = unserialize(file_get_contents(__DIR__ . '/../../asset/value/some-service-remoting-message.amf3'));
         $this->assertEquals($data, $mesg);
     }
-
+//"\x0\x0\x0\x0\x0\x1\x0\xB/1/onResult\x0\x0\x0\x0\x1H\x10\x0*flex.messaging.messages.AcknowledgeMessage\x0\rcorrelationId\x2\x0\$63FCE70D-F447-ED49-83E6-00001695D4AF\x0\tmessageId\x2\x0\$B1510529-D1A0-6A62-25DA-A00B1BF47BF6\x0\x8clientId\x2\x0\$3182A13C-AF4A-A148-AA73-000028716D94\x0\ttimestamp\x2\x0\r1437179933789\x0\ntimeToLive\x0\x0\x0\x0\x0\x0\x0\x0\x0\x0\xBdestination\x5\x0\x7headers\x3\x0\x4DSId\x2\x0\$3182A13C-AF4A-A148-AA73-000028716D94\x0\x0\t\x0\x4body\x5\x0\x0\t"
+//"\x0\x0\x0\x0\x0\x1\x0\xB/1/onResult\x0\x0\x0\x0\x1H\x10\x0*flex.messaging.messages.AcknowledgeMessage\x0\rcorrelationId\x2\x0\$63FCE70D-F447-ED49-83E6-00001695D4AF\x0\tmessageId\x2\x0\$B1510529-D1A0-6A62-25DA-A00B1BF47BF6\x0\x8clientId\x2\x0\$3182A13C-AF4A-A148-AA73-000028716D94\x0\ttimestamp\x2\x0\r1437179933687\x0\ntimeToLive\x0\x0\x0\x0\x0\x0\x0\x0\x0\x0\xBdestination\x5\x0\x7headers\x3\x0\x4DSId\x2\x0\$3182A13C-AF4A-A148-AA73-000028716D94\x0\x0\t\x0\x4body\x5\x0\x0\t"
     /**
      *
      */
@@ -254,7 +255,7 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
 
         //reset properties manually so we can compare output
         $commandMessage->messageId = '63FCE70D-F447-ED49-83E6-00001695D4AF';
-        $commandMessage->timestamp = 1437179933687;
+        $commandMessage->timestamp = round(1437179933687);
 
         $acknowledgeMessage = new AcknowledgeMessage($commandMessage);
 
@@ -262,14 +263,14 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
         $acknowledgeMessage->clientId       = '3182A13C-AF4A-A148-AA73-000028716D94';
         $acknowledgeMessage->messageId      = 'B1510529-D1A0-6A62-25DA-A00B1BF47BF6';
         $acknowledgeMessage->correlationId  = '63FCE70D-F447-ED49-83E6-00001695D4AF';
-        $acknowledgeMessage->timestamp      = 1437179933789;
+        $acknowledgeMessage->timestamp      = round(1437179933687);
         $acknowledgeMessage->headers        = (object) array('DSId' => $acknowledgeMessage->clientId);
 
         $messageBody->data = $acknowledgeMessage;
         $actionMessage->bodies[0] = $messageBody;
         $mesg = $this->serializer->writeMessage($actionMessage);
         //$this->sendToJamf($mesg);
-        //file_put_contents(__DIR__ . '/../asset/value/some-service-acknowledge-message.amf0', serialize($mesg));
+        //file_put_contents(__DIR__ . '/../../asset/value/some-service-acknowledge-message.amf0', serialize($mesg));
         $data = unserialize(file_get_contents(__DIR__ . '/../../asset/value/some-service-acknowledge-message.amf0'));
         $this->assertEquals($data, $mesg);
     }
@@ -286,7 +287,7 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
 
         //reset properties manually so we can compare output
         $commandMessage->messageId = '63FCE70D-F447-ED49-83E6-00001695D4AF';
-        $commandMessage->timestamp = 1437179933687;
+        $commandMessage->timestamp = round(1437179933687);
 
         $acknowledgeMessage = new AcknowledgeMessage($commandMessage);
 
@@ -294,7 +295,7 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
         $acknowledgeMessage->clientId       = '3182A13C-AF4A-A148-AA73-000028716D94';
         $acknowledgeMessage->messageId      = 'B1510529-D1A0-6A62-25DA-A00B1BF47BF6';
         $acknowledgeMessage->correlationId  = '63FCE70D-F447-ED49-83E6-00001695D4AF';
-        $acknowledgeMessage->timestamp      = 1437179933789;
+        $acknowledgeMessage->timestamp      = round(1437179933687);
         $acknowledgeMessage->headers        = (object) array('DSId' => $acknowledgeMessage->clientId);
 
         $messageBody->data = $acknowledgeMessage;
@@ -318,7 +319,7 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
 
         //reset properties manually so we can compare output
         $commandMessage->messageId = '63FCE70D-F447-ED49-83E6-00001695D4AF';
-        $commandMessage->timestamp = 1437179933687;
+        $commandMessage->timestamp = round(1437179933687);
 
         $acknowledgeMessage = new AcknowledgeMessage($commandMessage);
 
@@ -326,14 +327,14 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
         $acknowledgeMessage->clientId       = '3182A13C-AF4A-A148-AA73-000028716D94';
         $acknowledgeMessage->messageId      = 'B1510529-D1A0-6A62-25DA-A00B1BF47BF6';
         $acknowledgeMessage->correlationId  = '63FCE70D-F447-ED49-83E6-00001695D4AF';
-        $acknowledgeMessage->timestamp      = 1437179933789;
+        $acknowledgeMessage->timestamp      = round(1437179933687);
         $acknowledgeMessage->headers        = (object) array('DSId' => $acknowledgeMessage->clientId);
 
         $messageBody->data = $acknowledgeMessage;
         $actionMessage->bodies[0] = $messageBody;
         $mesg = $this->serializer->writeMessage($actionMessage);
         //$this->sendToJamf($mesg);
-        //file_put_contents(__DIR__ . '/../asset/value/some-service-acknowledge-message.amf3', serialize($mesg));
+        //file_put_contents(__DIR__ . '/../../asset/value/some-service-acknowledge-message.amf3', serialize($mesg));
         $data = unserialize(file_get_contents(__DIR__ . '/../../asset/value/some-service-acknowledge-message.amf3'));
         $this->assertEquals($data, $mesg);
     }
@@ -350,7 +351,7 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
 
         //reset properties manually so we can compare output
         $commandMessage->messageId = '63FCE70D-F447-ED49-83E6-00001695D4AF';
-        $commandMessage->timestamp = 1437179933687;
+        $commandMessage->timestamp = round(1437179933687);
 
         $acknowledgeMessage = new AcknowledgeMessage($commandMessage);
 
@@ -358,7 +359,7 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
         $acknowledgeMessage->clientId       = '3182A13C-AF4A-A148-AA73-000028716D94';
         $acknowledgeMessage->messageId      = 'B1510529-D1A0-6A62-25DA-A00B1BF47BF6';
         $acknowledgeMessage->correlationId  = '63FCE70D-F447-ED49-83E6-00001695D4AF';
-        $acknowledgeMessage->timestamp      = 1437179933789;
+        $acknowledgeMessage->timestamp      = round(1437179933687);
         $acknowledgeMessage->headers        = (object) array('DSId' => $acknowledgeMessage->clientId);
 
         $messageBody->data = $acknowledgeMessage;
