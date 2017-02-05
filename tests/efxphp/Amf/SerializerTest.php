@@ -241,8 +241,7 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
         $data = unserialize(file_get_contents(__DIR__ . '/../../asset/value/some-service-remoting-message.amf3'));
         $this->assertEquals($data, $mesg);
     }
-//"\x0\x0\x0\x0\x0\x1\x0\xB/1/onResult\x0\x0\x0\x0\x1H\x10\x0*flex.messaging.messages.AcknowledgeMessage\x0\rcorrelationId\x2\x0\$63FCE70D-F447-ED49-83E6-00001695D4AF\x0\tmessageId\x2\x0\$B1510529-D1A0-6A62-25DA-A00B1BF47BF6\x0\x8clientId\x2\x0\$3182A13C-AF4A-A148-AA73-000028716D94\x0\ttimestamp\x2\x0\r1437179933789\x0\ntimeToLive\x0\x0\x0\x0\x0\x0\x0\x0\x0\x0\xBdestination\x5\x0\x7headers\x3\x0\x4DSId\x2\x0\$3182A13C-AF4A-A148-AA73-000028716D94\x0\x0\t\x0\x4body\x5\x0\x0\t"
-//"\x0\x0\x0\x0\x0\x1\x0\xB/1/onResult\x0\x0\x0\x0\x1H\x10\x0*flex.messaging.messages.AcknowledgeMessage\x0\rcorrelationId\x2\x0\$63FCE70D-F447-ED49-83E6-00001695D4AF\x0\tmessageId\x2\x0\$B1510529-D1A0-6A62-25DA-A00B1BF47BF6\x0\x8clientId\x2\x0\$3182A13C-AF4A-A148-AA73-000028716D94\x0\ttimestamp\x2\x0\r1437179933687\x0\ntimeToLive\x0\x0\x0\x0\x0\x0\x0\x0\x0\x0\xBdestination\x5\x0\x7headers\x3\x0\x4DSId\x2\x0\$3182A13C-AF4A-A148-AA73-000028716D94\x0\x0\t\x0\x4body\x5\x0\x0\t"
+
     /**
      *
      */
