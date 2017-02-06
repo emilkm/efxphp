@@ -23,7 +23,7 @@ else
 	# Build PHP
 	cd $PHP_NAME
 	./buildconf --force
-	./configure --enable-debug --disable-all --enable-libxml --enable-simplexml --enable-dom --with-phar --prefix=/home/travis/build/emilkm/efxphp/php-7.1.1/install
+	./configure --enable-debug --disable-all --enable-libxml --enable-simplexml --enable-dom --enable-phar --prefix=/home/travis/build/emilkm/efxphp/php-7.1.1/install
 	make install
 fi
 
