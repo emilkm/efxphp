@@ -46,6 +46,7 @@ export REPORT_EXIT_STATUS=1
 export NO_INTERACTION=1
 
 cd $TRAVIS_BUILD_DIR/tests
+export PATH=$PATH:$TRAVIS_BUILD_DIR/tests
 wget https://phar.phpunit.de/phpunit.phar -O phpunit.phar
 $PHP_CLI -dextension=amf.so -m
 $PHP_CLI -dextension=amf.so phpunit.phar --configuration phpunit.xml efxphp
