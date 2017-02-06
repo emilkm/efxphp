@@ -28,6 +28,7 @@ else
 fi
 
 # Get AMFEXT
+cd ..
 git clone --depth 1 https://github.com/emilkm/amfext.git amfext
 mv amfext $PHP_NAME/ext/amf
 
