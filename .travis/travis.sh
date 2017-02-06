@@ -46,5 +46,5 @@ export NO_INTERACTION=1
 cd $EFXPHP_PATH
 wget https://phar.phpunit.de/phpunit.phar -O phpunit.phar
 $PHP_CLI -dextension=amf.so -m
-$PHP_CLI -dextension=amf.so phpunit.phar --configuration test/phpunit.xml
+$PHP_CLI -dextension=amf.so phpunit.phar --configuration tests/phpunit.xml
 
