@@ -29,9 +29,9 @@ else
 fi
 
 # Get AMFEXT
-cd $EFXPHP_PATH
-git clone --depth 1 https://github.com/emilkm/amfext.git amfext
-mv amfext $PHP_NAME/ext/amf
+cd $EFXPHP_PATH/$PHP_NAME/ext
+rm -fr ./amf
+git clone --depth 1 https://github.com/emilkm/amfext.git amf
 
 
 # Build AMFEXT
@@ -46,7 +46,7 @@ export REPORT_EXIT_STATUS=1
 export NO_INTERACTION=1
 
 cd $EFXPHP_PATH/tests
-echo $(pwd)
+echo "CWD="$(pwd)
 wget https://phar.phpunit.de/phpunit.phar -O phpunit.phar
 $PHP_CLI -dextension=amf.so -m
 $PHP_CLI -dextension=amf.so phpunit.phar --configuration phpunit.xml
