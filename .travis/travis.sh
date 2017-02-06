@@ -35,7 +35,7 @@ git clone --depth 1 https://github.com/emilkm/amfext.git amf
 
 
 # Build AMFEXT
-cd $PHP_NAME/ext/amf
+cd $BASE_PATH/$PHP_NAME/ext/amf
 ../../install/bin/phpize
 ./configure --with-php-config=$BASE_PATH/$PHP_NAME/install/bin/php-config
 make install
