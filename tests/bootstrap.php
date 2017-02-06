@@ -2,7 +2,7 @@
 //define the application root
 define('BASE', str_replace(array('\\', '\\\\'), '/', realpath('../')) . '/');
 
-require_once BASE . 'src/ClassLoader.php';
+require_once BASE . 'vendor/composer/ClassLoader.php';
 use Composer\Autoload\ClassLoader;
 $autoLoader = new ClassLoader();
 $autoLoader->setUseIncludePath(true);
@@ -10,6 +10,7 @@ $autoLoader->addPsr4('emilkm\\efxphp\\', BASE . 'src/');
 $autoLoader->addPsr4('emilkm\\tests\\', BASE . 'tests/');
 
 if (file_exists(BASE . 'vendor/autoload.php')) {
+
     $map = require BASE . 'vendor/composer/autoload_namespaces.php';
     foreach ($map as $namespace => $path) {
         $autoLoader->set($namespace, $path);
