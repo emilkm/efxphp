@@ -15,6 +15,8 @@ BASE_PATH=$(pwd)
 
 if [ -d "/home/travis/build/emilkm/php-7.1.1" ] 
 then
+	echo "Directory /home/travis/build/emilkm/php-7.1.1 exists." 
+else
     # Get and extract prebuilt PHP
 	wget "$PHP_URL" -O $PHP_PACKAGE
 	tar -xf $PHP_PACKAGE
