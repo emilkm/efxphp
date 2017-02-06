@@ -11,20 +11,14 @@ PHP_CLI="/home/travis/build/emilkm/efxphp/php-7.1.1/install/bin/php"
 # Move out of project
 BASE_PATH=$(pwd)
 
+ # Get and extract prebuilt PHP
+wget "$PHP_URL" -O $PHP_PACKAGE
+tar -xf $PHP_PACKAGE
 
-if [ -d "/home/travis/build/emilkm/efxphp/php-7.1.1" ] 
-then
-	echo "Directory /home/travis/build/emilkm/efxphp/php-7.1.1 exists." 
-else
-    # Get and extract prebuilt PHP
-	wget "$PHP_URL" -O $PHP_PACKAGE
-	tar -xf $PHP_PACKAGE
-
-	# Build PHP
-	./buildconf --force
-	./configure --enable-debug --disable-all --enable-libxml --enable-simplexml --enable-dom --with-phar --prefix=/home/travis/build/emilkm/efxphp/php-7.1.1/install
-	make install
-fi
+# Build PHP
+./buildconf --force
+./configure --enable-debug --disable-all --enable-libxml --enable-simplexml --enable-dom --with-phar --prefix=/home/travis/build/emilkm/efxphp/php-7.1.1/install
+make install
 
 
 # Get AMFEXT
