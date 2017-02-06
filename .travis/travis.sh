@@ -27,9 +27,6 @@ cd $PHP_NAME/ext/amf
 ./configure --with-php-config=/home/travis/build/emilkm/php-7.1.1/install/bin/php-config
 make install
 
-# Get PHPUNIT
-wget -O https://phar.phpunit.de/phpunit.phar
-
 # Run tests
 export REPORT_EXIT_STATUS=1
 export NO_INTERACTION=1

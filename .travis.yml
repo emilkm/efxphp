@@ -1,6 +1,6 @@
 dist: trusty
 
-language: C
+language: PHP
 
 env:
     - PHP_VERSION=7.1.1
@@ -10,3 +10,8 @@ matrix:
 
 script:
     - ./.travis/travis.sh
+
+cache:
+  directories:
+    - php-7.1.1
+
