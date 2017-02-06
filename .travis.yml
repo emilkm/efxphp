@@ -1,6 +1,6 @@
 dist: trusty
 
-language: PHP
+language: C
 
 env:
     - PHP_VERSION=7.1.1
