@@ -5,23 +5,26 @@ EFXPHP_PATH=$(pwd)
 # PHP Settings
 PHP_NAME="php-$PHP_VERSION"
 PHP_PACKAGE="php-$PHP_VERSION-travis.tar.gz"
-PHP_URL="http://www.emilmalinov.com/travis/$PHP_PACKAGE"
-PHP_CLI="/home/travis/build/emilkm/php-7.1.1/install/bin/php"
+PHP_URL="http://us1.php.net/get/$PHP_PACKAGE/from/this/mirror"
+PHP_CLI="/home/travis/build/emilkm/efxphp/php-7.1.1/install/bin/php"
 
-# Move out of project 
-cd ../
+# Move out of project
 BASE_PATH=$(pwd)
 
 
-if [ -d "/home/travis/build/emilkm/php-7.1.1" ] 
+if [ -d "/home/travis/build/emilkm/efxphp/php-7.1.1" ] 
 then
-	echo "Directory /home/travis/build/emilkm/php-7.1.1 exists." 
+	echo "Directory /home/travis/build/emilkm/efxphp/php-7.1.1 exists." 
 else
     # Get and extract prebuilt PHP
 	wget "$PHP_URL" -O $PHP_PACKAGE
 	tar -xf $PHP_PACKAGE
-fi
 
+	# Build PHP
+	./buildconf --force
+	./configure --enable-debug --disable-all --enable-libxml --enable-simplexml --enable-dom --with-phar --prefix=/home/travis/build/emilkm/efxphp/php-7.1.1/install
+	make install
+fi
 
 
 # Get AMFEXT
@@ -32,7 +35,7 @@ mv amfext $PHP_NAME/ext/amf
 # Build AMFEXT
 cd $PHP_NAME/ext/amf
 ../../install/bin/phpize
-./configure --with-php-config=/home/travis/build/emilkm/php-7.1.1/install/bin/php-config
+./configure --with-php-config=/home/travis/build/emilkm/efxphp/php-7.1.1/install/bin/php-config
 make install
 
 # Run tests
