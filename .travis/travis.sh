@@ -15,7 +15,7 @@ PHP_CLI="$BASE_PATH/$PHP_NAME/install/bin/php"
 
 if [ -e "$BASE_PATH/$PHP_NAME/configure" ] 
 then
-	echo "File BASE_PATH/$PHP_NAME/configure exists." 
+	echo "File $BASE_PATH/$PHP_NAME/configure exists." 
 else
     # Get and extract prebuilt PHP
 	wget "$PHP_URL" -O $PHP_PACKAGE
