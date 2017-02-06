@@ -1,6 +1,7 @@
 #!/bin/bash
 
 EFXPHP_PATH=$(pwd)
+echo $EFXPHP_PATH
 
 # PHP Settings
 PHP_NAME="php-$PHP_VERSION"
@@ -45,6 +46,7 @@ export REPORT_EXIT_STATUS=1
 export NO_INTERACTION=1
 
 cd $EFXPHP_PATH/tests
+echo $(pwd)
 wget https://phar.phpunit.de/phpunit.phar -O phpunit.phar
 $PHP_CLI -dextension=amf.so -m
 $PHP_CLI -dextension=amf.so phpunit.phar --configuration phpunit.xml
