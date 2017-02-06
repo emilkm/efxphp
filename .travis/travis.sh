@@ -45,6 +45,9 @@ rm -fr $BASE_PATH/$PHP_NAME/ext/amf
 export REPORT_EXIT_STATUS=1
 export NO_INTERACTION=1
 
+cd $TRAVIS_BUILD_DIR
+composer update dev
+export PATH="$TRAVIS_BUILD_DIR/vendor/bin":$PATH
 cd $TRAVIS_BUILD_DIR/tests
 $PHP_CLI -dextension=amf.so -m
 $PHP_CLI -dextension=amf.so phpunit --configuration phpunit.xml efxphp
