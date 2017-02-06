@@ -13,5 +13,5 @@ script:
 
 cache:
   directories:
-    - php-7.1.1
+    - $HOME/build/emilkm/php-$PHP_VERSION
 
