@@ -2,10 +2,6 @@
 //define the application root
 define('BASE', str_replace(array('\\', '\\\\'), '/', realpath('../')) . '/');
 
-if (!class_exists('PHPUnit_Framework_TestCase') && file_exists('phpunit.phar')) {
-    include 'phpunit.phar';
-}
-
 require_once BASE . 'src/ClassLoader.php';
 use Composer\Autoload\ClassLoader;
 $autoLoader = new ClassLoader();
