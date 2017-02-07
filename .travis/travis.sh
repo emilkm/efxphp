@@ -15,24 +15,23 @@ PHP_CLI="$BASE_PATH/$PHP_NAME/install/bin/php"
 
 if [ -e "$BASE_PATH/$PHP_NAME/configure" ] 
 then
-	echo "File $BASE_PATH/$PHP_NAME/configure exists." 
+    echo "File $BASE_PATH/$PHP_NAME/configure exists." 
 else
     # Get and extract prebuilt PHP
-	wget "$PHP_URL" -O $PHP_PACKAGE
-	tar -xf $PHP_PACKAGE
+    wget "$PHP_URL" -O $PHP_PACKAGE
+    tar -xf $PHP_PACKAGE
 
-	# Build PHP
-	cd $PHP_NAME
-	./buildconf --force
-	./configure --enable-debug --disable-all --enable-libxml --enable-simplexml --enable-dom --enable-phar --prefix=$BASE_PATH/$PHP_NAME/install
-	make install
+    # Build PHP
+    cd $PHP_NAME
+    ./buildconf --force
+    ./configure --enable-debug --disable-all --enable-libxml --enable-simplexml --enable-dom --enable-phar --prefix=$BASE_PATH/$PHP_NAME/install
+    make install
 fi
 
 # Get AMFEXT
 cd $BASE_PATH/$PHP_NAME/ext
 rm -fr ./amf
 git clone --depth 1 https://github.com/emilkm/amfext.git amf
-
 
 # Build AMFEXT
 cd $BASE_PATH/$PHP_NAME/ext/amf
@@ -49,5 +48,5 @@ cd $TRAVIS_BUILD_DIR
 composer update dev
 cd $TRAVIS_BUILD_DIR/tests
 $PHP_CLI -dextension=amf.so -m
-$PHP_CLI -dextension=amf.so $TRAVIS_BUILD_DIR/vendor/bin/phpunit --configuration phpunit.xml efxphp/Amf
+$PHP_CLI -dextension=amf.so $TRAVIS_BUILD_DIR/vendor/bin/phpunit --testbox --configuration phpunit.xml efxphp/Amf
 
