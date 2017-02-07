@@ -48,5 +48,5 @@ cd $TRAVIS_BUILD_DIR
 composer update dev
 cd $TRAVIS_BUILD_DIR/tests
 $PHP_CLI -dextension=amf.so -m
-$PHP_CLI -dextension=amf.so $TRAVIS_BUILD_DIR/vendor/bin/phpunit --testbox --configuration phpunit.xml efxphp/Amf
+$PHP_CLI -dextension=amf.so $TRAVIS_BUILD_DIR/vendor/bin/phpunit --configuration phpunit.xml efxphp/Amf
 
