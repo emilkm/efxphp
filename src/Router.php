@@ -59,8 +59,9 @@ class Router
     /**
      * @param ActionContext   $actionContext
      * @param RemotingMessage $message
+     * @param bool            $skipReflection
      */
-    public function find($actionContext, $message)
+    public function find($actionContext, $message, $skipReflection)
     {
         $actionContext->classMetadata[$actionContext->messageNumber] = null;
 
@@ -85,6 +86,13 @@ class Router
         if (!class_exists($classExists)) {
             $ex = new Exception('Service not found.');
             $actionContext->errors[$actionContext->messageNumber] = $ex;
+            return;
+        }
+
+        $actionContext->classMetadata[$actionContext->messageNumber]['classAndPackage'] = $message->source;
+        $actionContext->classMetadata[$actionContext->messageNumber]['className'] = $className;
+
+        if ($skipReflection) {
             return;
         }
 
@@ -182,8 +190,6 @@ class Router
                     $access = $metadata['access'];
                 }
 
-                $actionContext->classMetadata[$actionContext->messageNumber]['classAndPackage'] = $message->source;
-                $actionContext->classMetadata[$actionContext->messageNumber]['className'] = $className;
                 $actionContext->classMetadata[$actionContext->messageNumber]['methods'][$methodName] = array(
                     'arguments' => $arguments,
                     'defaults' => $defaults,

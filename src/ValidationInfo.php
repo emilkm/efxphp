@@ -28,6 +28,16 @@ class ValidationInfo
     private $embeddedDataName;
 
     /**
+     * @var string
+     */
+    public $className;
+
+    /**
+     * @var string
+     */
+    public $methodName;
+
+    /**
      * @var mixed Given value for the parameter
      */
     public $value;
@@ -159,6 +169,29 @@ class ValidationInfo
      */
     public $message;
 
+
+    public function __construct($className, $methodName, array $info, $embeddedDataName)
+    {
+        $this->className = $className;
+        $this->methodName = $methodName;
+        $this->embeddedDataName = $embeddedDataName;
+
+        $properties = get_object_vars($this);
+        unset($properties['contentType']);
+        foreach ($properties as $property => $value) {
+            if ($property == 'className' || $property == 'methodName' || $property == 'embeddedDataName') {
+                continue;
+            }
+            $this->{$property} = $this->getProperty($info, $property);
+        }
+        $inner = $this->nestedValue($info, 'properties');
+        $this->rules = !empty($inner) ? $inner + $info : $info;
+        unset($this->rules['properties']);
+        if (is_string($this->type) && $this->type == 'integer') {
+            $this->type = 'int';
+        }
+    }
+
     public function numericValue($value)
     {
         return (int)$value == $value
@@ -229,22 +262,4 @@ class ValidationInfo
         }
         return $r;
     }
-
-    public function __construct(array $info, $embeddedDataName)
-    {
-        $this->embeddedDataName = $embeddedDataName;
-
-        $properties = get_object_vars($this);
-        unset($properties['contentType']);
-        foreach ($properties as $property => $value) {
-            $this->{$property} = $this->getProperty($info, $property);
-        }
-        $inner = $this->nestedValue($info, 'properties');
-        $this->rules = !empty($inner) ? $inner + $info : $info;
-        unset($this->rules['properties']);
-        if (is_string($this->type) && $this->type == 'integer') {
-            $this->type = 'int';
-        }
-    }
 }
-

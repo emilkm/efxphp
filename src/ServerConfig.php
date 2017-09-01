@@ -16,37 +16,41 @@ namespace emilkm\efxphp;
  *
  * List properties for intellisense in some IDEs
  *
- * @property bool $productionMode
+ * @property string $serverOperationMode
  * @property string $servicesRootDirectory
  * @property string $servicesRootNamespace
  * @property string $cacheDirectory
+ * @property string $logDirectory
  * @property string $responseClass
- * @property array $supportedCharsets
  * @property bool $crossOriginResourceSharing
  * @property string $accessControlAllowOrigin
  * @property bool $contentEncodingEnabled
  * @property string $sidPropagation
+ * @property array $databases
  */
 class ServerConfig extends AbstractConfig
 {
-    /**
-     * When set to false, it will run in debug mode
-     * and parse the class files every time
-     *
-     * @var bool
-     */
-    protected $productionMode = false;
+    const OPMODE_PRODUCTION  = 'production';
+    const OPMODE_DEBUG       = 'debug';
+    const OPMODE_DEVELOPMENT = 'development';
 
     /**
-     * root directory where services and VOs are located
+     * 'production' = Error messages sent back to client do not include debug info.
+     * 'debug' = Error messages sent back to clietn include debug info.
+     * 'development' = Error messages like debug, and service class files parsed on each request.
      *
      * @var string
+     */
+    protected $serverOperationMode = 'production';
+
+    /**
+     * @var string The root directory where services and VOs are located.
      */
     protected $servicesRootDirectory;
 
     /**
      * Used by the Router to find the service class based on the message source.
-     * 
+     *
      * false = no namespacing | '' = namespace as is | 'root' = root\as is
      *
      * @var string
@@ -54,11 +58,16 @@ class ServerConfig extends AbstractConfig
     protected $servicesRootNamespace = false;
 
     /**
-     * @var string The full path of the directory where all the generated files will
-     * be kept. When set to null (default) it will use the cache folder that is
-     * in the same folder as index.php (gateway)
+     * @var string The full path of the directory where all the service metadata
+     * files are kept. When value does not point to a writable directory, caching is disabled.
      */
     protected $cacheDirectory;
+
+    /**
+     * @var string The full path of the directory where application log database
+     * is located. When value does not point to a writable directory, logging is disabled.
+     */
+    protected $logDirectory;
 
     /**
      * 'header' = through AMF RemoteMessage header sID | 'query' = through query string sID
@@ -86,7 +95,7 @@ class ServerConfig extends AbstractConfig
      * @var bool Enables CORS support
      */
     protected $crossOriginResourceSharing = false;
-    
+
     /**
      * @var string
      */
@@ -96,4 +105,13 @@ class ServerConfig extends AbstractConfig
      * @var bool
      */
     protected $contentEncodingEnabled = true;
+
+    // ==================================================================
+    // Databases
+    // ------------------------------------------------------------------
+
+    /**
+     * @var array Database configuration settings.
+     */
+    protected $databases;
 }

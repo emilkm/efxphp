@@ -64,6 +64,10 @@ class MetadataCache
                 $s .= PHP_EOL . PHP_EOL . 'return $o;';
 
                 $file = $this->_file($service['classAndPackage']);
+                if ($file == '.php') {
+                    continue;
+                }
+
                 $r = @file_put_contents($file, "<?php
 /**
  * DO NOT EDIT BY HAND! THIS FILE WAS AUTO GENERAED BY

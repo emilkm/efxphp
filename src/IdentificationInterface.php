@@ -17,7 +17,7 @@ namespace emilkm\efxphp;
 interface IdentificationInterface
 {
     /**
-     * The implementation of this interface may indetify and establish
+     * The implementation of this interface may identify and establish
      * a client session. If the API is public and no sessions
      * are needed, simply do nothing.
      *

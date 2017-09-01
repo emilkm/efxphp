@@ -13,6 +13,7 @@ namespace emilkm\efxphp;
 use ReflectionClass;
 use ReflectionMethod;
 use ReflectionException;
+use Closure;
 
 /**
  * @description     Dice - A minimal Dependency Injection Container for PHP
@@ -24,17 +25,17 @@ use ReflectionException;
 class Dice
 {
     /**
-     * Rules which have been set using addRule()
+	 * @var array $rules Rules which have been set using addRule()
      */
     private $rules = [];
 
     /**
-     * A cache of closures based on class name so each class is only reflected once
+	 * @var array $cache A cache of closures based on class name so each class is only reflected once
      */
     private $cache = [];
 
     /**
-     * Stores any instances marked as 'shared' so create() can return the same instance
+	 * @var array $instances Stores any instances marked as 'shared' so create() can return the same instance
      */
     private $instances = [];
 
@@ -76,24 +77,23 @@ class Dice
     }
 
     /**
-     * Add a rule $rule to the class $name
-     * see https://r.je/dice.html#example3 for $rule format
-     *
-     * @param string $name
-     * @param array  $rule
+	 * Add a rule $rule to the class $name
+	 * @param string $name The name of the class to add the rule for
+	 * @param array $rule The container can be fully configured using rules provided by associative arrays. See {@link https://r.je/dice.html#example3} for a description of the rules.
      */
     public function addRule($name, array $rule)
     {
-        $this->rules[ltrim(strtolower($name), '\\')] = array_merge($this->getRule($name), $rule);
+        if (isset($rule['instanceOf']) && (!array_key_exists('inherit', $rule) || $rule['inherit'] === true)) {
+            $rule = array_replace_recursive($this->getRule($rule['instanceOf']), $rule);
+        }
+        $this->rules[ltrim(strtolower($name), '\\')] = array_replace_recursive($this->getRule($name), $rule);
     }
 
-    /**
-     * Returns the rule that will be applied to the class $name in create()
-     *
-     * @param string $name
-     *
-     * @return array The named rule, or the default rule, or an empty array
-     */
+	/**
+	 * Returns the rule that will be applied to the class $name when calling create()
+	 * @param string $name The name of the class to get the rules for
+	 * @return array The rules for the specified class
+	 */
     public function getRule($name)
     {
         // first, check for exact match
@@ -122,13 +122,11 @@ class Dice
     }
 
     /**
-     * Returns a fully constructed object based on $name using $args and $share
-     * as constructor arguments if supplied
-     *
-     * @param string $name
-     * @param array  $args
-     * @param array  $share
-     *
+	 * Returns a fully constructed object based on $name using $args and $share as constructor arguments if supplied
+	 * @param string name The name of the class to instantiate
+	 * @param array $args An array with any additional arguments to be passed into the constructor upon instantiation
+	 * @param array $share Whether or not this class instance be shared, so that the same instance is passed around each time
+	 * @return object A fully constructed object based on the specified input arguments
      * @return mixed
      */
     public function create($name, array $args = [], array $share = [])
@@ -149,11 +147,10 @@ class Dice
     }
 
     /**
-     * returns a closure for creating object $name based on $rule,
-     * caching the reflection object for later use
-     *
-     * @param string $name
-     * @param array  $rule
+	 * Returns a closure for creating object $name based on $rule, caching the reflection object for later use
+	 * @param string $name the Name of the class to get the closure for
+	 * @param array $rule The container can be fully configured using rules provided by associative arrays. See {@link https://r.je/dice.html#example3} for a description of the rules.
+	 * @return callable A closure
      */
     private function getClosure($name, array $rule)
     {
@@ -175,7 +172,6 @@ class Dice
                 if ($constructor) {
                     $constructor->invokeArgs($this->instances[$name], $params($args, $share));
                 }
-
                 return $this->instances[$name];
             };
         } elseif ($params) {
@@ -193,17 +189,11 @@ class Dice
         //If there are shared instances, create them and merge them with shared instances higher up the object graph
         if (isset($rule['shareInstances'])) {
             $closure = function (array $args, array $share) use ($closure, $rule) {
-                return $closure(
-                    $args,
-                    array_merge(
-                        $args,
-                        $share,
-                        array_map(
-                            [$this, 'create'],
-                            $rule['shareInstances']
-                        )
-                    )
-                );
+                /*foreach($rule['shareInstances'] as $instance) {
+                    $share[] = $this->create($instance, [], $share);
+                }
+                return $closure($args, array_merge($args, $share));*/
+                return $closure($args, array_merge($args, $share, array_map([$this, 'create'], $rule['shareInstances'])));
             };
         }
 
@@ -224,25 +214,29 @@ class Dice
                 }
                 return $object;
             }
-            : $closure;
+            : Closure::fromCallable($closure);
     }
 
-    /**
-     * looks for 'instance' array keys in $param and when found
-     * returns an object based on the value see https://r.je/dice.html#example3-1
-     */
+	/**
+	 * Looks for 'instance' array keys in $param and when found returns an object based on the value see {@link https:// r.je/dice.html#example3-1}
+	 * @param mixed $param Either a string or an array,
+	 * @param array $share Whether or not this class instance be shared, so that the same instance is passed around each time
+	 * @param bool $createFromString
+	 * @return mixed
+	 */
     private function expand($param, array $share = [], $createFromString = false)
     {
         if (is_array($param) && isset($param['instance'])) {
             //Call or return the value sored under the key 'instance'
             //For ['instance' => ['className', 'methodName'] construct the instance before calling it
+            $args = isset($param['params']) ? $this->expand($param['params']) : [];
             if (is_array($param['instance'])) {
                 $param['instance'][0] = $this->expand($param['instance'][0], $share, true);
             }
             if (is_callable($param['instance'])) {
-                return call_user_func($param['instance'], ...(isset($param['params']) ? $this->expand($param['params']) : []));
+                return call_user_func($param['instance'], ...$args);
             } else {
-                return $this->create($param['instance'], $share);
+                return $this->create($param['instance'], array_merge($args, $share));
             }
         } elseif (is_array($param)) {
             //Recursively search for 'instance' keys in $param
@@ -254,10 +248,12 @@ class Dice
         return is_string($param) && $createFromString ? $this->create($param) : $param;
     }
 
-    /**
-     * returns a closure that generates arguments for $method based on $rule
-     * and any $args passed into the closure
-     */
+	/**
+	 * Returns a closure that generates arguments for $method based on $rule and any $args passed into the closure
+	 * @param object $method An instance of ReflectionMethod (see: {@link http:// php.net/manual/en/class.reflectionmethod.php})
+	 * @param array $rule The container can be fully configured using rules provided by associative arrays. See {@link https://r.je/dice.html#example3} for a description of the rules.
+	 * @return callable A closure that uses the cached information to generate the arguments for the method
+	 */
     private function getParams(ReflectionMethod $method, array $rule)
     {
         //Cache some information about the parameter in $paramInfo
@@ -269,7 +265,7 @@ class Dice
         }
 
         //Return a closure that uses the cached information to generate the arguments for the method
-        return function (array $args, array $share = []) use ($paramInfo, $rule) {
+        return Closure::fromCallable(function (array $args, array $share = []) use ($paramInfo, $rule) {
             //Now merge all the possible parameters: user-defined in the rule via constructParams, shared instances and the $args argument from $dice->create();
             if ($share || isset($rule['constructParams'])) {
                 $args = array_merge(
@@ -315,6 +311,6 @@ class Dice
             }
             //variadic functions will only have one argument. To account for those, append any remaining arguments to the list
             return $parameters;
-        };
+        });
     }
 }

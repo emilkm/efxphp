@@ -20,6 +20,8 @@ use emilkm\efxphp\Amf\Messages\AcknowledgeMessage;
 use emilkm\efxphp\Amf\Messages\CommandMessage;
 use emilkm\efxphp\Amf\Messages\ErrorMessage;
 
+use ReflectionMethod;
+use ReflectionProperty;
 use Exception;
 
 /**
@@ -28,7 +30,7 @@ use Exception;
  */
 class Server
 {
-    const VERSION = '0.0.0';
+    const VERSION = '1.0.0';
 
     /**
      * @var ActionContext
@@ -129,10 +131,15 @@ class Server
     }
 
     /**
-     * Write metadata cache
+     * Write metadata cache unless class reflection is disabled and there is no
+     * class metadata to cache.
      */
     public function __destruct()
     {
+        if ($this->config->get('classReflectionDisabled', false)) {
+            return;
+        }
+
         try {
             if ($this->actionContext
                 && is_array($this->actionContext->classMetadata)
@@ -151,14 +158,14 @@ class Server
      */
     public function handle()
     {
-        try {
-            $requestMethod = $_SERVER['REQUEST_METHOD'];
-            if ($requestMethod == 'OPTIONS') {
-                $this->negotiateCORS();
-            } elseif ($requestMethod != 'POST') {
-                throw new Exception('Unsupported request method.');
-            }
+        $requestMethod = $_SERVER['REQUEST_METHOD'];
+        if ($requestMethod == 'OPTIONS') {
+            $this->negotiateCORS();
+        } elseif ($requestMethod != 'POST') {
+            throw new Exception('Unsupported request method.');
+        }
 
+        try {
             $this->actionContext = new ActionContext();
             $this->decode();
             $this->identify();
@@ -166,7 +173,7 @@ class Server
             $this->encode();
             $this->respond();
         } catch (Exception $e) {
-            throw new Exception('TODO: dealing with handling exceptions');
+            throw new Exception('Could not handle the request.');
         }
     }
 
@@ -244,7 +251,7 @@ class Server
         try {
             $this->identProvider->identify($clientId, $sessionId);
         } catch (Exception $e) {
-            for ($i = 0; $i < $bodyCount; $i++) {
+            for ($this->actionContext->messageNumber = 0; $this->actionContext->messageNumber < $bodyCount; $this->actionContext->messageNumber++) {
                 $this->actionContext->errors[$this->actionContext->messageNumber] = $e;
             }
         }
@@ -262,6 +269,10 @@ class Server
             $this->actionContext->responseMessage->bodies[$this->actionContext->messageNumber] = $responseBody;
 
             try {
+                if ($this->actionContext->errors[$this->actionContext->messageNumber] instanceof Exception) {
+                    throw $this->actionContext->errors[$this->actionContext->messageNumber];
+                }
+
                 $responseBody->data = $responseMessage = new AcknowledgeMessage($requestMessage);
 
                 if ($requestMessage instanceof CommandMessage) {
@@ -277,9 +288,9 @@ class Server
                 }
 
                 $this->route($requestMessage);
-                $this->authorize($requestMessage);
+                $serviceInstance = $this->authorize($requestMessage);
                 $this->validate($requestMessage);
-                $this->invoke($requestMessage, $responseMessage);
+                $this->invoke($requestMessage, $responseMessage, $serviceInstance);
                 $responseBody->targetURI .= Constants::RESULT_METHOD;
             } catch (Exception $e) {
                 $responseBody->targetURI .= Constants::STATUS_METHOD;
@@ -292,7 +303,7 @@ class Server
                     $errorMessage->faultDetail = $e->errors;
                 }
 
-                if (!$this->config->productionMode) {
+                if (!$this->config->serverOperationMode == ServerConfig::OPMODE_PRODUCTION) {
                     $errorMessage->extendedData = $e->getTraceAsString();
                 }
             }
@@ -304,8 +315,13 @@ class Server
      */
     protected function route($message)
     {
+        if ($this->config->get('classReflectionDisabled', false)) {
+            $this->router->find($this->actionContext, $message, true);
+            return;
+        }
+
         $found = false;
-        if ($this->config->productionMode) {
+        if (!$this->config->serverOperationMode == ServerConfig::OPMODE_DEVELOPMENT) {
             if ($this->metadataCache->isCached($message->source)) {
                 $this->actionContext->classMetadata[$this->actionContext->messageNumber]
                     = $this->metadataCache->get($message->source);
@@ -314,12 +330,13 @@ class Server
         }
 
         if (!$found) {
-            $this->router->find($this->actionContext, $message);
+            $this->router->find($this->actionContext, $message, false);
         }
     }
 
     /**
      * @param RemotingMessage $message
+     * @return mixed Method access array or null.
      */
     protected function authorize($message)
     {
@@ -331,23 +348,44 @@ class Server
             }
         }
 
+        if ($this->config->get('classReflectionDisabled', false)) {
+            $classMetadata = $this->actionContext->classMetadata[$this->actionContext->messageNumber];
+            $className = $classMetadata['className'];
+            $serviceInstance = $this->dice->create($className);
+
+            try {
+                $method = new ReflectionMethod($className, $message->operation);
+
+                //Method not found
+                if ($method->isPrivate()) {
+                    throw new Exception('Method not found.');
+                }
+            } catch (Exception $e) {
+                 new Exception('Method not found.');
+            }
+
+            $methodAccess = isset($serviceInstance->methodAccess) && is_array($serviceInstance->methodAccess) ?  $serviceInstance->methodAccess : null;
+
+            $this->autzProvider->authorize($classMetadata['className'], $message->operation, $methodAccess);
+
+            return $serviceInstance;
+        }
+
         //Method not found
         $classMetadata = $this->actionContext->classMetadata[$this->actionContext->messageNumber];
-        if (!isset($classMetadata['methods'][$message->operation])) {
+        if (!isset($classMetadata['methods'][$message->operation]) || ($method['access'] == 'private')) {
             throw new Exception('Method not found.');
         }
 
         //authorization
         $method = $classMetadata['methods'][$message->operation];
         if ($method['access'] == 'public') {
-            return;
+            return null;
         }
 
-        if ($method['access'] == 'private') {
-            throw new Exception('Method is private.');
-        } else {
-            $this->autzProvider->authorize($classMetadata['className'], $message->operation, $method['access']);
-        }
+        $this->autzProvider->authorize($classMetadata['className'], $message->operation, $method['access']);
+
+        return null;
     }
 
     /**
@@ -355,6 +393,10 @@ class Server
      */
     protected function validate($message)
     {
+        if ($this->config->get('classReflectionDisabled', false)) {
+            return;
+        }
+
         if (is_null($message->body)) {
             $message->body = array(null);
         } elseif (!is_array($message->body)) {
@@ -369,7 +411,7 @@ class Server
             } else {
                 $input = null;
             }
-            $info = new ValidationInfo($param, $this->commentParser->embeddedDataName);
+            $info = new ValidationInfo($classMetadata['className'], $message->operation, $param, $this->commentParser->embeddedDataName);
             $errors = array();
             $this->validator->validate($input, $info, $errors);
             if (count($errors) > 0) {
@@ -385,14 +427,16 @@ class Server
     /**
      * @param RemotingMessage $requestMessage
      * @param AcknowledgeMessage $responseMessage
+     * @param mixed $serviceInstance
      */
-    protected function invoke($requestMessage, $responseMessage)
+    protected function invoke($requestMessage, $responseMessage, $serviceInstance)
     {
         try {
-            $classMetadata = $this->actionContext->classMetadata[$this->actionContext->messageNumber];
-            $class = $classMetadata['className'];
-            //$serviceInstance = new $class;
-            $serviceInstance = $this->dice->create($class);
+            if ($serviceInstance == null) {
+                $classMetadata = $this->actionContext->classMetadata[$this->actionContext->messageNumber];
+                $className = $classMetadata['className'];
+                $serviceInstance = $this->dice->create($className);
+            }
             $methodName = $requestMessage->operation;
             $parameters = &$requestMessage->body;
 
@@ -405,8 +449,8 @@ class Server
             );
 
             if ($this->config->responseClass != null) {
-                $class = $this->config->responseClass;
-                $response = new $class($result);
+                $className = $this->config->responseClass;
+                $response = $this->dice->create($className, [$result]);
                 $responseMessage->body = $response;
             } else {
                 $responseMessage->body = $result;
