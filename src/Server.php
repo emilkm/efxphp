@@ -303,7 +303,7 @@ class Server
                     $errorMessage->faultDetail = $e->errors;
                 }
 
-                if (!$this->config->serverOperationMode == ServerConfig::OPMODE_PRODUCTION) {
+                if ($this->config->serverOperationMode != ServerConfig::OPMODE_PRODUCTION) {
                     $errorMessage->extendedData = $e->getTraceAsString();
                 }
             }
@@ -321,7 +321,7 @@ class Server
         }
 
         $found = false;
-        if (!$this->config->serverOperationMode == ServerConfig::OPMODE_DEVELOPMENT) {
+        if ($this->config->serverOperationMode != ServerConfig::OPMODE_DEVELOPMENT) {
             if ($this->metadataCache->isCached($message->source)) {
                 $this->actionContext->classMetadata[$this->actionContext->messageNumber]
                     = $this->metadataCache->get($message->source);
