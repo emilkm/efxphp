@@ -49,24 +49,26 @@ class MetadataCache
     {
         if (is_array($data) && count($data) > 0) {
             foreach ($data as $service) {
+                if ($service == null) {
+                    continue;
+                }
                 $s = '$o = array();' . PHP_EOL;
                 $s .= '$o[\'className\'] = \'' . $service['className'] . '\';';
-                foreach ($service['methods'] as $methodName => $method) {
-                    $s .= PHP_EOL . PHP_EOL .
-                        "//==================== $methodName ===================="
-                        . PHP_EOL . PHP_EOL;
-                    if (is_array($method)) {
-                        $s .= '$o[\'methods\'][\'' . $methodName . '\'] = '
-                            . str_replace('  ', '    ', var_export($method, true))
-                            . ';';
+                if (is_array($service['methods'])) {
+                    foreach ($service['methods'] as $methodName => $method) {
+                        $s .= PHP_EOL . PHP_EOL .
+                            "//==================== $methodName ===================="
+                            . PHP_EOL . PHP_EOL;
+                        if (is_array($method)) {
+                            $s .= '$o[\'methods\'][\'' . $methodName . '\'] = '
+                                . str_replace('  ', '    ', var_export($method, true))
+                                . ';';
+                        }
                     }
                 }
                 $s .= PHP_EOL . PHP_EOL . 'return $o;';
 
                 $file = $this->_file($service['classAndPackage']);
-                if ($file == '.php') {
-                    continue;
-                }
 
                 $r = @file_put_contents($file, "<?php
 /**

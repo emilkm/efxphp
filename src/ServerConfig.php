@@ -92,14 +92,9 @@ class ServerConfig extends AbstractConfig
     // ------------------------------------------------------------------
 
     /**
-     * @var bool Enables CORS support
+     * @var string CORS origin.
      */
-    protected $crossOriginResourceSharing = false;
-
-    /**
-     * @var string
-     */
-    protected $accessControlAllowOrigin = '*';
+    protected $accessControlAllowOrigin = 'none';
 
     /**
      * @var bool

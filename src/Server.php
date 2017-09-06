@@ -179,21 +179,19 @@ class Server
 
     protected function negotiateCORS()
     {
-        if ($this->config->crossOriginResourceSharing) {
-            if (isset($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_METHOD'])) {
-                header('Access-Control-Allow-Methods: POST');
-            }
-            if (isset($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS'])) {
-                header('Access-Control-Allow-Headers: ' . $_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS']);
-            }
-            header('Access-Control-Allow-Origin: ' . (
-                $this->config->accessControlAllowOrigin == '*' && isset($_SERVER['HTTP_ORIGIN'])
-                    ? $_SERVER['HTTP_ORIGIN']
-                    : $this->config->accessControlAllowOrigin
-            ));
-            header('Access-Control-Allow-Credentials: true');
-            exit(0);
+        if (isset($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_METHOD'])) {
+            header('Access-Control-Allow-Methods: POST');
         }
+        if (isset($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS'])) {
+            header('Access-Control-Allow-Headers: ' . $_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS']);
+        }
+        header('Access-Control-Allow-Origin: ' . (
+            $this->config->accessControlAllowOrigin == '*' && isset($_SERVER['HTTP_ORIGIN'])
+                ? $_SERVER['HTTP_ORIGIN']
+                : $this->config->accessControlAllowOrigin
+        ));
+        header('Access-Control-Allow-Credentials: false');
+        exit(0);
     }
 
     protected function getRawPostData()
@@ -341,7 +339,7 @@ class Server
     protected function authorize($message)
     {
         //Service not found, or could not parse comments
-        if (count($this->actionContext->errors) > $this->actionContext->errors) {
+        if (count($this->actionContext->errors) > $this->actionContext->messageNumber) {
             $error = $this->actionContext->errors[$this->actionContext->messageNumber];
             if ($error instanceof Exception) {
                 throw $error;
@@ -450,7 +448,11 @@ class Server
 
             if ($this->config->responseClass != null) {
                 $className = $this->config->responseClass;
-                $response = $this->dice->create($className, [$result]);
+                if ($result instanceof $className) {
+                    $response = $result;
+                } else {
+                    $response = $this->dice->create($className, [$result, null]);
+                }
                 $responseMessage->body = $response;
             } else {
                 $responseMessage->body = $result;
