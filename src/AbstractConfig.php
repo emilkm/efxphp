@@ -57,7 +57,7 @@ abstract class AbstractConfig
         if (!property_exists($this, $setting)) {
             return $ifnxornull;
         }
-        return is_null($this->$setting) ? $ifnxornull : $this->$setting;
+        return ($this->$setting === null) ? $ifnxornull : $this->$setting;
     }
 
     /**

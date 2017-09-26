@@ -22,7 +22,6 @@ namespace emilkm\efxphp;
  * @property string $cacheDirectory
  * @property string $logDirectory
  * @property string $responseClass
- * @property bool $crossOriginResourceSharing
  * @property string $accessControlAllowOrigin
  * @property bool $contentEncodingEnabled
  * @property string $sidPropagation
@@ -41,7 +40,7 @@ class ServerConfig extends AbstractConfig
      *
      * @var string
      */
-    protected $serverOperationMode = 'production';
+    protected $serverOperationMode = OPMODE_PRODUCTION;
 
     /**
      * @var string The root directory where services and VOs are located.
@@ -92,9 +91,9 @@ class ServerConfig extends AbstractConfig
     // ------------------------------------------------------------------
 
     /**
-     * @var string CORS origin.
+     * @var string | array CORS origin(s)
      */
-    protected $accessControlAllowOrigin = 'none';
+    protected $accessControlAllowOrigin = 'http://localhost';
 
     /**
      * @var bool

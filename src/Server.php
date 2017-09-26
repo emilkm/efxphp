@@ -23,6 +23,7 @@ use emilkm\efxphp\Amf\Messages\ErrorMessage;
 use ReflectionMethod;
 use ReflectionProperty;
 use Exception;
+use Error;
 
 /**
  * @author  Emil Malinov
@@ -93,6 +94,11 @@ class Server
     protected $autzProvider;
 
     /**
+     * @var LoggerInterface
+     */
+    protected $log;
+
+    /**
      * lots of seams
      *
      * @param Dice                    $dice
@@ -116,7 +122,8 @@ class Server
         Validator $validator,
         Router $router,
         IdentificationInterface $identProvider,
-        AuthorizationInterface $autzProvider
+        AuthorizationInterface $autzProvider,
+        LoggerInterface $logger
     ) {
         $this->dice = $dice;
         $this->config = $config;
@@ -128,11 +135,14 @@ class Server
         $this->router = $router;
         $this->identProvider = $identProvider;
         $this->autzProvider = $autzProvider;
+        $this->log = $logger;
     }
 
     /**
      * Write metadata cache unless class reflection is disabled and there is no
      * class metadata to cache.
+     *
+     * @throws \Exception
      */
     public function __destruct()
     {
@@ -148,13 +158,14 @@ class Server
                 $this->metadataCache->set($this->actionContext->classMetadata);
             }
         } catch (Exception $e) {
-            echo $e->getMessage();
-            exit(1);
+            throw new Exception('Could not write to cache: ' . $e->getMessage(), 0, $e);
         }
     }
 
     /**
      * Handle the request
+     *
+     * @throws \Exception
      */
     public function handle()
     {
@@ -173,7 +184,7 @@ class Server
             $this->encode();
             $this->respond();
         } catch (Exception $e) {
-            throw new Exception('Could not handle the request.');
+            throw new Exception('Could not handle the request.', 0, $e);
         }
     }
 
@@ -185,11 +196,15 @@ class Server
         if (isset($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS'])) {
             header('Access-Control-Allow-Headers: ' . $_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS']);
         }
-        header('Access-Control-Allow-Origin: ' . (
-            $this->config->accessControlAllowOrigin == '*' && isset($_SERVER['HTTP_ORIGIN'])
-                ? $_SERVER['HTTP_ORIGIN']
-                : $this->config->accessControlAllowOrigin
-        ));
+        $allowOrigin = is_string($this->config->accessControlAllowOrigin) ? $this->config->accessControlAllowOrigin : 'http://localhost';
+        if (isset($_SERVER['HTTP_ORIGIN'])) {
+            if ($this->config->accessControlAllowOrigin == '*'
+                || (is_array($this->config->accessControlAllowOrigin) && in_array($_SERVER['HTTP_ORIGIN'], $this->config->accessControlAllowOrigin))
+            ) {
+                $allowOrigin = $_SERVER['HTTP_ORIGIN'];
+            }
+        }
+        header('Access-Control-Allow-Origin: ' . $allowOrigin);
         header('Access-Control-Allow-Credentials: false');
         exit(0);
     }
@@ -249,8 +264,8 @@ class Server
         try {
             $this->identProvider->identify($clientId, $sessionId);
         } catch (Exception $e) {
-            for ($this->actionContext->messageNumber = 0; $this->actionContext->messageNumber < $bodyCount; $this->actionContext->messageNumber++) {
-                $this->actionContext->errors[$this->actionContext->messageNumber] = $e;
+            for ($this->actionContext->messageIndex = 0; $this->actionContext->messageIndex < $bodyCount; $this->actionContext->messageIndex++) {
+                $this->actionContext->errors[$this->actionContext->messageIndex] = $e;
             }
         }
     }
@@ -259,16 +274,16 @@ class Server
     {
         $this->actionContext->responseMessage = new ActionMessage($this->actionContext->requestMessage->version);
         $bodyCount = $this->actionContext->requestMessage->getBodyCount();
-        for ($this->actionContext->messageNumber = 0; $this->actionContext->messageNumber < $bodyCount; $this->actionContext->messageNumber++) {
+        for ($this->actionContext->messageIndex = 0; $this->actionContext->messageIndex < $bodyCount; $this->actionContext->messageIndex++) {
             /** @var MessageBody $requestBody */
-            $requestBody = $this->actionContext->requestMessage->bodies[$this->actionContext->messageNumber];
+            $requestBody = $this->actionContext->requestMessage->bodies[$this->actionContext->messageIndex];
             $requestMessage = $requestBody->getDataAsMessage();
             $responseBody = new MessageBody($requestBody->responseURI);
-            $this->actionContext->responseMessage->bodies[$this->actionContext->messageNumber] = $responseBody;
+            $this->actionContext->responseMessage->bodies[$this->actionContext->messageIndex] = $responseBody;
 
             try {
-                if ($this->actionContext->errors[$this->actionContext->messageNumber] instanceof Exception) {
-                    throw $this->actionContext->errors[$this->actionContext->messageNumber];
+                if ($this->actionContext->errors[$this->actionContext->messageIndex] instanceof Exception) {
+                    throw $this->actionContext->errors[$this->actionContext->messageIndex];
                 }
 
                 $responseBody->data = $responseMessage = new AcknowledgeMessage($requestMessage);
@@ -290,19 +305,23 @@ class Server
                 $this->validate($requestMessage);
                 $this->invoke($requestMessage, $responseMessage, $serviceInstance);
                 $responseBody->targetURI .= Constants::RESULT_METHOD;
-            } catch (Exception $e) {
+            } catch (Exception | Error $e) {
                 $responseBody->targetURI .= Constants::STATUS_METHOD;
                 $responseBody->data = $errorMessage = new ErrorMessage($requestMessage);
 
                 $errorMessage->faultCode = $e->getCode();
                 $errorMessage->faultString = $e->getMessage();
 
-                if ($e instanceof ValidationException) {
-                    $errorMessage->faultDetail = $e->errors;
-                }
-
                 if ($this->config->serverOperationMode != ServerConfig::OPMODE_PRODUCTION) {
                     $errorMessage->extendedData = $e->getTraceAsString();
+                }
+
+                if ($e instanceof ValidationException) {
+                    $errorMessage->faultDetail = $e->errors;
+                } else {
+                    $ectx = property_exists($e, 'context') ? $e->context : 'unknown';
+                    $etrc = ($this->config->serverOperationMode != ServerConfig::OPMODE_PRODUCTION) ? $errorMessage->extendedData : $e->getTraceAsString();
+                    $this->log->write('error', $e->getMessage() . PHP_EOL . PHP_EOL . '>>>> TRACE >>>>' . PHP_EOL . $etrc, $e->getCode(), $ectx);
                 }
             }
         }
@@ -321,7 +340,7 @@ class Server
         $found = false;
         if ($this->config->serverOperationMode != ServerConfig::OPMODE_DEVELOPMENT) {
             if ($this->metadataCache->isCached($message->source)) {
-                $this->actionContext->classMetadata[$this->actionContext->messageNumber]
+                $this->actionContext->classMetadata[$this->actionContext->messageIndex]
                     = $this->metadataCache->get($message->source);
                 $found = true;
             }
@@ -339,17 +358,18 @@ class Server
     protected function authorize($message)
     {
         //Service not found, or could not parse comments
-        if (count($this->actionContext->errors) > $this->actionContext->messageNumber) {
-            $error = $this->actionContext->errors[$this->actionContext->messageNumber];
+        if (count($this->actionContext->errors) > $this->actionContext->messageIndex) {
+            $error = $this->actionContext->errors[$this->actionContext->messageIndex];
             if ($error instanceof Exception) {
                 throw $error;
             }
         }
 
         if ($this->config->get('classReflectionDisabled', false)) {
-            $classMetadata = $this->actionContext->classMetadata[$this->actionContext->messageNumber];
+            $classMetadata = $this->actionContext->classMetadata[$this->actionContext->messageIndex];
             $className = $classMetadata['className'];
             $serviceInstance = $this->dice->create($className);
+            $methodAccess = null;
 
             try {
                 $method = new ReflectionMethod($className, $message->operation);
@@ -362,7 +382,11 @@ class Server
                  new Exception('Method not found.');
             }
 
-            $methodAccess = isset($serviceInstance->methodAccess) && is_array($serviceInstance->methodAccess) ?  $serviceInstance->methodAccess : null;
+            try {
+                $methodAccess = $serviceInstance->getMethodAccess();
+            } catch (Exception $e) {
+
+            }
 
             $this->autzProvider->authorize($classMetadata['className'], $message->operation, $methodAccess);
 
@@ -370,7 +394,7 @@ class Server
         }
 
         //Method not found
-        $classMetadata = $this->actionContext->classMetadata[$this->actionContext->messageNumber];
+        $classMetadata = $this->actionContext->classMetadata[$this->actionContext->messageIndex];
         if (!isset($classMetadata['methods'][$message->operation]) || ($method['access'] == 'private')) {
             throw new Exception('Method not found.');
         }
@@ -401,7 +425,7 @@ class Server
             $message->body = array($message->body);
         }
         $validationErrors = array();
-        $classMetadata = $this->actionContext->classMetadata[$this->actionContext->messageNumber];
+        $classMetadata = $this->actionContext->classMetadata[$this->actionContext->messageIndex];
         $method = $classMetadata['methods'][$message->operation];
         foreach ($method['metadata']['param'] as $index => $param) {
             if (isset($message->body[$index])) {
@@ -431,20 +455,30 @@ class Server
     {
         try {
             if ($serviceInstance == null) {
-                $classMetadata = $this->actionContext->classMetadata[$this->actionContext->messageNumber];
+                $classMetadata = $this->actionContext->classMetadata[$this->actionContext->messageIndex];
                 $className = $classMetadata['className'];
                 $serviceInstance = $this->dice->create($className);
             }
             $methodName = $requestMessage->operation;
-            $parameters = &$requestMessage->body;
 
-            $result = call_user_func_array(
-                array(
-                    $serviceInstance,
-                    $methodName,
-                ),
-                $parameters
-            );
+            if ($requestMessage->body == null) {
+                $result = call_user_func(
+                    array(
+                        $serviceInstance,
+                        $methodName,
+                    )
+                );
+            } else {
+                $parameters = &$requestMessage->body;
+
+                $result = call_user_func_array(
+                    array(
+                        $serviceInstance,
+                        $methodName,
+                    ),
+                    $parameters
+                );
+            }
 
             if ($this->config->responseClass != null) {
                 $className = $this->config->responseClass;
@@ -457,7 +491,7 @@ class Server
             } else {
                 $responseMessage->body = $result;
             }
-        } catch (Exception $e) {
+        } catch (Exception | Error $e) {
             throw $e;
         }
     }
@@ -473,15 +507,15 @@ class Server
         header('Expires: Wed, 24 June 1987 08:55:00 GMT');
         header('X-Powered-By: EFXPHP v' . self::VERSION);
 
-        if ($this->config->crossOriginResourceSharing) {
-            header('Access-Control-Allow-Origin: ' . (
-                $this->config->accessControlAllowOrigin == '*' && isset($_SERVER['HTTP_ORIGIN'])
-                    ? $_SERVER['HTTP_ORIGIN']
-                    : $this->config->accessControlAllowOrigin
-            ));
-            header('Access-Control-Allow-Credentials: true');
-            header('Access-Control-Max-Age: 86400');
+        $allowOrigin = is_string($this->config->accessControlAllowOrigin) ? $this->config->accessControlAllowOrigin : 'http://localhost';
+        if (isset($_SERVER['HTTP_ORIGIN'])) {
+            if ($this->config->accessControlAllowOrigin == '*'
+                || (is_array($this->config->accessControlAllowOrigin) && in_array($_SERVER['HTTP_ORIGIN'], $this->config->accessControlAllowOrigin))
+            ) {
+                $allowOrigin = $_SERVER['HTTP_ORIGIN'];
+            }
         }
+        header('Access-Control-Allow-Origin: ' . $allowOrigin);
 
         header('Connection: Keep-Alive');
         header('Content-Type: application/x-amf');

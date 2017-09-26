@@ -9,17 +9,17 @@ Extension or not, encoded output and decoded input are the same, and are OK by A
 
 # PHP7
 
-Works on PHP 7.
+Works on PHP 7.1
 
-There are no PHP 7 specific features used at present.
+Can be made to work on PHP 7.0 easily if needed. (Only using the convenience of handling multiple exceptions in single catch block, in a couple of places.)
 
 [![Build Status](https://travis-ci.org/emilkm/efxphp.svg?branch=master)](https://travis-ci.org/emilkm/efxphp)
 
 # PHP5
 
-Works on PHP 5.6
+No longer works on PHP 5.6 out of the box. (Can be made to if really necessary.)
 
-Unfortunately the PHP5 branch of amfext has a few outstanding memory leaks.
+Unfortunately the PHP5 branch of amfext has a few outstanding memory leaks. Time to move to PHP 7+ :)
 
 # DONE
 
@@ -31,6 +31,7 @@ Unfortunately the PHP5 branch of amfext has a few outstanding memory leaks.
 
 * Run the AMF client tests on travis.
 * Write docs.
+* Add more tests.
 * ...
 
 

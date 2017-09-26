@@ -60,10 +60,12 @@ class Router
      * @param ActionContext   $actionContext
      * @param RemotingMessage $message
      * @param bool            $skipReflection
+     *
+     * @throws Exception 
      */
     public function find($actionContext, $message, $skipReflection)
     {
-        $actionContext->classMetadata[$actionContext->messageNumber] = null;
+        $actionContext->classMetadata[$actionContext->messageIndex] = null;
 
         $classExists = str_replace('.', '\\', $message->source);
 
@@ -85,12 +87,12 @@ class Router
 
         if (!class_exists($classExists)) {
             $ex = new Exception('Service not found.');
-            $actionContext->errors[$actionContext->messageNumber] = $ex;
-            return;
+            $actionContext->errors[$actionContext->messageIndex] = $ex;
+            throw $ex;
         }
 
-        $actionContext->classMetadata[$actionContext->messageNumber]['classAndPackage'] = $message->source;
-        $actionContext->classMetadata[$actionContext->messageNumber]['className'] = $className;
+        $actionContext->classMetadata[$actionContext->messageIndex]['classAndPackage'] = $message->source;
+        $actionContext->classMetadata[$actionContext->messageIndex]['className'] = $className;
 
         if ($skipReflection) {
             return;
@@ -190,7 +192,7 @@ class Router
                     $access = $metadata['access'];
                 }
 
-                $actionContext->classMetadata[$actionContext->messageNumber]['methods'][$methodName] = array(
+                $actionContext->classMetadata[$actionContext->messageIndex]['methods'][$methodName] = array(
                     'arguments' => $arguments,
                     'defaults' => $defaults,
                     'metadata' => $metadata,
@@ -199,9 +201,8 @@ class Router
             }
         } catch (Exception $e) {
             $ex = new Exception("Error while parsing comments of `$className` class. " . $e->getMessage());
-            $actionContext->errors[$actionContext->messageNumber] = $ex;
-
-            return;
+            $actionContext->errors[$actionContext->messageIndex] = $ex;
+            throw $ex;
         }
     }
 

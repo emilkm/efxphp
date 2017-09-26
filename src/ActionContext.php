@@ -23,11 +23,11 @@ class ActionContext
     public $requestIsCommand = false;
 
     /**
-     * Current message number diring processing
+     * Current message index in the bodies array.
      *
      * @var int
      */
-    public $messageNumber;
+    public $messageIndex;
 
     /**
      * @var ActionMessage
