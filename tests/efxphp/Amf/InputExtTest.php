@@ -284,7 +284,7 @@ class InputExtTest extends \PHPUnit_Framework_TestCase
     /**
      *
      */
-    public function testreadAmf0XmlToEfxphpXml()
+    /*public function testreadAmf0XmlToEfxphpXml()
     {
         $data = unserialize(file_get_contents(__DIR__ . '/../../asset/value/xml.amf0'));
         $this->in->setData($data);
@@ -292,12 +292,12 @@ class InputExtTest extends \PHPUnit_Framework_TestCase
         $obj = $this->in->readObject();
         $this->assertInstanceOf('emilkm\efxphp\Amf\Types\Xml', $obj->value);
         $this->assertEquals('<x><string>abc</string><number>123</number></x>', $obj->value->data);
-    }
+    }*/
 
     /**
      *
      */
-    public function testreadAmf0XmlToSimpleXMLElement()
+    /*public function testreadAmf0XmlToSimpleXMLElement()
     {
         $data = unserialize(file_get_contents(__DIR__ . '/../../asset/value/xmlelement.amf0'));
         $this->in->setData($data);
@@ -306,12 +306,12 @@ class InputExtTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('SimpleXMLElement', $obj->value);
         $xmlstring = preg_replace('/\>(\n|\r|\r\n| |\t)*\</', '><', trim($obj->value->asXML()));
         $this->assertEquals('<?xml version="1.0"?><x><string>abc</string><number>123</number></x>', $xmlstring);
-    }
+    }*/
 
     /**
      *
      */
-    public function testreadAmf0XmlDocumentFromEfxphpXmlDocument()
+    /*public function testreadAmf0XmlDocumentFromEfxphpXmlDocument()
     {
         $data = unserialize(file_get_contents(__DIR__ . '/../../asset/value/xmldocument.amf0'));
         $this->in->setData($data);
@@ -319,12 +319,12 @@ class InputExtTest extends \PHPUnit_Framework_TestCase
         $obj = $this->in->readObject();
         $this->assertInstanceOf('emilkm\efxphp\Amf\Types\Xml', $obj->value);
         $this->assertEquals('<x><string>abc</string><number>123</number></x>', $obj->value->data);
-    }
+    }*/
 
     /**
      *
      */
-    public function testreadAmf0XmlDocumentFromDOMElement()
+    /*public function testreadAmf0XmlDocumentFromDOMElement()
     {
         $data = unserialize(file_get_contents(__DIR__ . '/../../asset/value/domelement.amf0'));
         $this->in->setData($data);
@@ -333,7 +333,7 @@ class InputExtTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('SimpleXMLElement', $obj->value);
         $xmlstring = preg_replace('/\>(\n|\r|\r\n| |\t)*\</', '><', trim($obj->value->asXML()));
         $this->assertEquals('<?xml version="1.0"?><x><string>abc</string><number>123</number></x>', $xmlstring);
-    }
+    }*/
 
     //##########################################################################
     // AMF3
@@ -803,7 +803,7 @@ class InputExtTest extends \PHPUnit_Framework_TestCase
     /**
      *
      */
-    public function testreadAmf3XmlToEfxphpXml()
+    /*public function testreadAmf3XmlToEfxphpXml()
     {
         $data = unserialize(file_get_contents(__DIR__ . '/../../asset/value/xml.amf3'));
         $this->in->setData($data);
@@ -811,12 +811,12 @@ class InputExtTest extends \PHPUnit_Framework_TestCase
         $obj = $this->in->readObject();
         $this->assertInstanceOf('emilkm\efxphp\Amf\Types\Xml', $obj->value);
         $this->assertEquals('<x><string>abc</string><number>123</number></x>', $obj->value->data);
-    }
+    }*/
 
     /**
      *
      */
-    public function testreadAmf3XmlToSimpleXMLElement()
+    /*public function testreadAmf3XmlToSimpleXMLElement()
     {
         $data = unserialize(file_get_contents(__DIR__ . '/../../asset/value/xmlelement.amf3'));
         $this->in->setData($data);
@@ -825,12 +825,12 @@ class InputExtTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('SimpleXMLElement', $obj->value);
         $xmlstring = preg_replace('/\>(\n|\r|\r\n| |\t)*\</', '><', trim($obj->value->asXML()));
         $this->assertEquals('<?xml version="1.0"?><x><string>abc</string><number>123</number></x>', $xmlstring);
-    }
+    }*/
 
     /**
      *
      */
-    public function testreadAmf3XmlToEfxphpXmlAndReference()
+    /*public function testreadAmf3XmlToEfxphpXmlAndReference()
     {
         $data = unserialize(file_get_contents(__DIR__ . '/../../asset/value/xml-and-reference.amf3'));
         $this->in->setData($data);
@@ -840,12 +840,12 @@ class InputExtTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('emilkm\efxphp\Amf\Types\Xml', $obj->value2);
         $this->assertEquals('<x><string>abc</string><number>123</number></x>', $obj->value1->data);
         $this->assertEquals('<x><string>abc</string><number>123</number></x>', $obj->value2->data);
-    }
+    }*/
 
     /**
      *
      */
-    public function testreadAmf3XmlToSimpleXMLElementAndReference()
+    /*public function testreadAmf3XmlToSimpleXMLElementAndReference()
     {
         $data = unserialize(file_get_contents(__DIR__ . '/../../asset/value/xmlelement-and-reference.amf3'));
         $this->in->setData($data);
@@ -857,12 +857,12 @@ class InputExtTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('<?xml version="1.0"?><x><string>abc</string><number>123</number></x>', $xmlstring1);
         $xmlstring2 = preg_replace('/\>(\n|\r|\r\n| |\t)*\</', '><', trim($obj->value2->asXML()));
         $this->assertEquals('<?xml version="1.0"?><x><string>abc</string><number>123</number></x>', $xmlstring2);
-    }
+    }*/
 
     /**
      *
      */
-    public function testreadAmf3XmlDocumentToEfxphpXmlDocument()
+    /*public function testreadAmf3XmlDocumentToEfxphpXmlDocument()
     {
         $data = unserialize(file_get_contents(__DIR__ . '/../../asset/value/xmldocument.amf3'));
         $this->in->setData($data);
@@ -870,12 +870,12 @@ class InputExtTest extends \PHPUnit_Framework_TestCase
         $obj = $this->in->readObject();
         $this->assertInstanceOf('emilkm\efxphp\Amf\Types\XmlDocument', $obj->value);
         $this->assertEquals('<x><string>abc</string><number>123</number></x>', $obj->value->data);
-    }
+    }*/
 
     /**
      *
      */
-    public function testreadAmf3XmlDocumentToDOMElement()
+    /*public function testreadAmf3XmlDocumentToDOMElement()
     {
         $data = unserialize(file_get_contents(__DIR__ . '/../../asset/value/domelement.amf3'));
         $this->in->setData($data);
@@ -884,12 +884,12 @@ class InputExtTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('DOMElement', $obj->value);
         $xmlstring = preg_replace('/\>(\n|\r|\r\n| |\t)*\</', '><', trim($obj->value->ownerDocument->saveXML($obj->value)));
         $this->assertEquals('<x><string>abc</string><number>123</number></x>', $xmlstring);
-    }
+    }*/
 
     /**
      *
      */
-    public function testreadAmf3XmlDocumentToEfxphpXmlDocumentAndReference()
+    /*public function testreadAmf3XmlDocumentToEfxphpXmlDocumentAndReference()
     {
         $data = unserialize(file_get_contents(__DIR__ . '/../../asset/value/xmldocument-and-reference.amf3'));
         $this->in->setData($data);
@@ -899,12 +899,12 @@ class InputExtTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('emilkm\efxphp\Amf\Types\XmlDocument', $obj->value2);
         $this->assertEquals('<x><string>abc</string><number>123</number></x>', $obj->value1->data);
         $this->assertEquals('<x><string>abc</string><number>123</number></x>', $obj->value2->data);
-    }
+    }*/
 
     /**
      *
      */
-    public function testreadAmf3XmlDocumentToDOMElementAndReference()
+    /*public function testreadAmf3XmlDocumentToDOMElementAndReference()
     {
         $data = unserialize(file_get_contents(__DIR__ . '/../../asset/value/domelement-and-reference.amf3'));
         $this->in->setData($data);
@@ -916,12 +916,12 @@ class InputExtTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('<x><string>abc</string><number>123</number></x>', $xmlstring1);
         $xmlstring2 = preg_replace('/\>(\n|\r|\r\n| |\t)*\</', '><', trim($obj->value2->ownerDocument->saveXML($obj->value2)));
         $this->assertEquals('<x><string>abc</string><number>123</number></x>', $xmlstring2);
-    }
+    }*/
 
     /**
      *
      */
-    public function testreadAmf3VectorInt()
+    /*public function testreadAmf3VectorInt()
     {
         $exp = array(1, 2, 3);
         $data = unserialize(file_get_contents(__DIR__ . '/../../asset/value/vector-int.amf3'));
@@ -931,12 +931,12 @@ class InputExtTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(Constants::AMF3_VECTOR_INT, $obj->value->type);
         $this->assertEquals(false, $obj->value->fixed);
         $this->assertEquals($exp, $obj->value->data);
-    }
+    }*/
 
     /**
      *
      */
-    public function testreadAmf3VectorIntNegative()
+    /*public function testreadAmf3VectorIntNegative()
     {
         $exp = array(-3, -2, -1);
         $data = unserialize(file_get_contents(__DIR__ . '/../../asset/value/vector-int-negative.amf3'));
@@ -946,12 +946,12 @@ class InputExtTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(Constants::AMF3_VECTOR_INT, $obj->value->type);
         $this->assertEquals(false, $obj->value->fixed);
         $this->assertEquals($exp, $obj->value->data);
-    }
+    }*/
 
     /**
      *
      */
-    public function testreadAmf3VectorUint()
+    /*public function testreadAmf3VectorUint()
     {
         $exp = array(2147483647, 2147483648, 4294967295);
         $data = unserialize(file_get_contents(__DIR__ . '/../../asset/value/vector-uint.amf3'));
@@ -961,12 +961,12 @@ class InputExtTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(Constants::AMF3_VECTOR_UINT, $obj->value->type);
         $this->assertEquals(false, $obj->value->fixed);
         $this->assertEquals($exp, $obj->value->data);
-    }
+    }*/
 
     /**
      *
      */
-    public function testreadAmf3VectorDouble()
+    /*public function testreadAmf3VectorDouble()
     {
         $exp = array(-31.57, 0, 31.57);
         $data = unserialize(file_get_contents(__DIR__ . '/../../asset/value/vector-double.amf3'));
@@ -976,12 +976,12 @@ class InputExtTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(Constants::AMF3_VECTOR_DOUBLE, $obj->value->type);
         $this->assertEquals(false, $obj->value->fixed);
         $this->assertEquals($exp, $obj->value->data);
-    }
+    }*/
 
     /**
      *
      */
-    public function testreadAmf3VectorObject()
+    /*public function testreadAmf3VectorObject()
     {
         $v1 = new stdClass();
         $v1->value = 1;
@@ -997,12 +997,12 @@ class InputExtTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(Constants::AMF3_VECTOR_OBJECT, $obj->value->type);
         $this->assertEquals(false, $obj->value->fixed);
         $this->assertEquals($exp, $obj->value->data);
-    }
+    }*/
 
     /**
      *
      */
-    public function testreadAmf3VectorObjectAndReference()
+    /*public function testreadAmf3VectorObjectAndReference()
     {
         $v1 = new stdClass();
         $v1->value = 1;
@@ -1023,7 +1023,7 @@ class InputExtTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(false, $obj->value2->fixed);
         $this->assertEquals($exp, $obj->value1->data);
         $this->assertEquals($exp, $obj->value2->data);
-    }
+    }*/
 
     /**
      *

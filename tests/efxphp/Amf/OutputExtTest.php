@@ -375,7 +375,7 @@ class OutputExtTest extends \PHPUnit_Framework_TestCase
     /**
      *
      */
-    public function testwriteAmf0XmlFromEfxphpXml()
+    /*public function testwriteAmf0XmlFromEfxphpXml()
     {
         $this->out->setAvmPlus(false);
         $obj = new stdClass();
@@ -385,12 +385,12 @@ class OutputExtTest extends \PHPUnit_Framework_TestCase
         //file_put_contents(__DIR__ . '/../asset/value/xml.amf0', serialize($this->out->data));
         $data = unserialize(file_get_contents(__DIR__ . '/../../asset/value/xml.amf0'));
         $this->assertEquals($data, $this->out->data);
-    }
+    }*/
 
     /**
      *
      */
-    public function testwriteAmf0XmlFromSimpleXMLElement()
+    /*public function testwriteAmf0XmlFromSimpleXMLElement()
     {
         $this->out->setAvmPlus(false);
         $obj = new stdClass();
@@ -400,12 +400,12 @@ class OutputExtTest extends \PHPUnit_Framework_TestCase
         //file_put_contents(__DIR__ . '/../asset/value/xmlelement.amf0', serialize($this->out->data));
         $data = unserialize(file_get_contents(__DIR__ . '/../../asset/value/xmlelement.amf0'));
         $this->assertEquals($data, $this->out->data);
-    }
+    }*/
 
     /**
      *
      */
-    public function testwriteAmf0XmlDocumentFromEfxphpXmlDocument()
+    /*public function testwriteAmf0XmlDocumentFromEfxphpXmlDocument()
     {
         $this->out->setAvmPlus(false);
         $obj = new stdClass();
@@ -420,7 +420,7 @@ class OutputExtTest extends \PHPUnit_Framework_TestCase
     /**
      *
      */
-    public function testwriteAmf0XmlDocumentFromDOMElement()
+    /*public function testwriteAmf0XmlDocumentFromDOMElement()
     {
         $this->out->setAvmPlus(false);
         $obj = new stdClass();
@@ -430,7 +430,7 @@ class OutputExtTest extends \PHPUnit_Framework_TestCase
         //file_put_contents(__DIR__ . '/../asset/value/domelement.amf0', serialize($this->out->data));
         $data = unserialize(file_get_contents(__DIR__ . '/../../asset/value/domelement.amf0'));
         $this->assertEquals($data, $this->out->data);
-    }
+    }*/
 
     //##########################################################################
     // AMF3
@@ -1016,7 +1016,7 @@ class OutputExtTest extends \PHPUnit_Framework_TestCase
     /**
      *
      */
-    public function testwriteAmf3XmlFromEfxphpXml()
+    /*public function testwriteAmf3XmlFromEfxphpXml()
     {
         $this->out->setAvmPlus(true);
         $obj = new stdClass();
@@ -1026,12 +1026,12 @@ class OutputExtTest extends \PHPUnit_Framework_TestCase
         //file_put_contents(__DIR__ . '/../asset/value/xml.amf3', serialize($this->out->data));
         $data = unserialize(file_get_contents(__DIR__ . '/../../asset/value/xml.amf3'));
         $this->assertEquals($data, $this->out->data);
-    }
+    }*/
 
     /**
      *
      */
-    public function testwriteAmf3XmlFromSimpleXMLElement()
+    /*public function testwriteAmf3XmlFromSimpleXMLElement()
     {
         $this->out->setAvmPlus(true);
         $obj = new stdClass();
@@ -1041,12 +1041,12 @@ class OutputExtTest extends \PHPUnit_Framework_TestCase
         //file_put_contents(__DIR__ . '/../asset/value/xmlelement.amf3', serialize($this->out->data));
         $data = unserialize(file_get_contents(__DIR__ . '/../../asset/value/xmlelement.amf3'));
         $this->assertEquals($data, $this->out->data);
-    }
+    }*/
 
     /**
      *
      */
-    public function testwriteAmf3XmlFromEfxphpXmlAndReference()
+    /*public function testwriteAmf3XmlFromEfxphpXmlAndReference()
     {
         $this->out->setAvmPlus(true);
         $obj = new stdClass();
@@ -1058,12 +1058,12 @@ class OutputExtTest extends \PHPUnit_Framework_TestCase
         //file_put_contents(__DIR__ . '/../asset/value/xml-and-reference.amf3', serialize($this->out->data));
         $data = unserialize(file_get_contents(__DIR__ . '/../../asset/value/xml-and-reference.amf3'));
         $this->assertEquals($data, $this->out->data);
-    }
+    }*/
 
     /**
      *
      */
-    public function testwriteAmf3XmlFromSimpleXMLElementAndReference()
+    /*public function testwriteAmf3XmlFromSimpleXMLElementAndReference()
     {
         $this->out->setAvmPlus(true);
         $obj = new stdClass();
@@ -1075,12 +1075,12 @@ class OutputExtTest extends \PHPUnit_Framework_TestCase
         //file_put_contents(__DIR__ . '/../asset/value/xmlelement-and-reference.amf3', serialize($this->out->data));
         $data = unserialize(file_get_contents(__DIR__ . '/../../asset/value/xmlelement-and-reference.amf3'));
         $this->assertEquals($data, $this->out->data);
-    }
+    }*/
 
     /**
      *
      */
-    public function testwriteAmf3XmlDocumentFromEfxphpXmlDocument()
+    /*public function testwriteAmf3XmlDocumentFromEfxphpXmlDocument()
     {
         $this->out->setAvmPlus(true);
         $obj = new stdClass();
@@ -1090,12 +1090,12 @@ class OutputExtTest extends \PHPUnit_Framework_TestCase
         //file_put_contents(__DIR__ . '/../asset/value/xmldocument.amf3', serialize($this->out->data));
         $data = unserialize(file_get_contents(__DIR__ . '/../../asset/value/xmldocument.amf3'));
         $this->assertEquals($data, $this->out->data);
-    }
+    }*/
 
     /**
      *
      */
-    public function testwriteAmf3XmlDocumentFromDOMElement()
+    /*public function testwriteAmf3XmlDocumentFromDOMElement()
     {
         $this->out->setAvmPlus(true);
         $obj = new stdClass();
@@ -1105,12 +1105,12 @@ class OutputExtTest extends \PHPUnit_Framework_TestCase
         //file_put_contents(__DIR__ . '/../asset/value/domelement.amf3', serialize($this->out->data));
         $data = unserialize(file_get_contents(__DIR__ . '/../../asset/value/domelement.amf3'));
         $this->assertEquals($data, $this->out->data);
-    }
+    }*/
 
     /**
      *
      */
-    public function testwriteAmf3XmlDocumentFromEfxphpXmlDocumentAndReference()
+    /*public function testwriteAmf3XmlDocumentFromEfxphpXmlDocumentAndReference()
     {
         $this->out->setAvmPlus(true);
         $obj = new stdClass();
@@ -1122,12 +1122,12 @@ class OutputExtTest extends \PHPUnit_Framework_TestCase
         //file_put_contents(__DIR__ . '/../asset/value/xmldocument-and-reference.amf3', serialize($this->out->data));
         $data = unserialize(file_get_contents(__DIR__ . '/../../asset/value/xmldocument-and-reference.amf3'));
         $this->assertEquals($data, $this->out->data);
-    }
+    }*/
 
     /**
      *
      */
-    public function testwriteAmf3XmlDocumentFromDOMElementAndReference()
+    /*public function testwriteAmf3XmlDocumentFromDOMElementAndReference()
     {
         $this->out->setAvmPlus(true);
         $obj = new stdClass();
@@ -1139,12 +1139,12 @@ class OutputExtTest extends \PHPUnit_Framework_TestCase
         //file_put_contents(__DIR__ . '/../asset/value/domelement-and-reference.amf3', serialize($this->out->data));
         $data = unserialize(file_get_contents(__DIR__ . '/../../asset/value/domelement-and-reference.amf3'));
         $this->assertEquals($data, $this->out->data);
-    }
+    }*/
 
     /**
      *
      */
-    public function testwriteAmf3VectorInt()
+    /*public function testwriteAmf3VectorInt()
     {
         $this->out->setAvmPlus(true);
         $obj = new stdClass();
@@ -1155,12 +1155,12 @@ class OutputExtTest extends \PHPUnit_Framework_TestCase
         //file_put_contents(__DIR__ . '/../asset/value/vector-int.amf3', serialize($this->out->data));
         $data = unserialize(file_get_contents(__DIR__ . '/../../asset/value/vector-int.amf3'));
         $this->assertEquals($data, $this->out->data);
-    }
+    }*/
 
     /**
      *
      */
-    public function testwriteAmf3VectorIntNegative()
+    /*public function testwriteAmf3VectorIntNegative()
     {
         $this->out->setAvmPlus(true);
         $obj = new stdClass();
@@ -1171,12 +1171,12 @@ class OutputExtTest extends \PHPUnit_Framework_TestCase
         //file_put_contents(__DIR__ . '/../asset/value/vector-int-negative.amf3', serialize($this->out->data));
         $data = unserialize(file_get_contents(__DIR__ . '/../../asset/value/vector-int-negative.amf3'));
         $this->assertEquals($data, $this->out->data);
-    }
+    }*/
 
     /**
      *
      */
-    public function testwriteAmf3VectorUint()
+    /*public function testwriteAmf3VectorUint()
     {
         $this->out->setAvmPlus(true);
         $obj = new stdClass();
@@ -1187,12 +1187,12 @@ class OutputExtTest extends \PHPUnit_Framework_TestCase
         //file_put_contents(__DIR__ . '/../asset/value/vector-uint.amf3', serialize($this->out->data));
         $data = unserialize(file_get_contents(__DIR__ . '/../../asset/value/vector-uint.amf3'));
         $this->assertEquals($data, $this->out->data);
-    }
+    }*/
 
     /**
      *
      */
-    public function testwriteAmf3VectorDouble()
+    /*public function testwriteAmf3VectorDouble()
     {
         $this->out->setAvmPlus(true);
         $obj = new stdClass();
@@ -1203,12 +1203,12 @@ class OutputExtTest extends \PHPUnit_Framework_TestCase
         //file_put_contents(__DIR__ . '/../asset/value/vector-double.amf3', serialize($this->out->data));
         $data = unserialize(file_get_contents(__DIR__ . '/../../asset/value/vector-double.amf3'));
         $this->assertEquals($data, $this->out->data);
-    }
+    }*/
 
     /**
      *
      */
-    public function testwriteAmf3VectorObject()
+    /*public function testwriteAmf3VectorObject()
     {
         $this->out->setAvmPlus(true);
         $v1 = new stdClass();
@@ -1225,12 +1225,12 @@ class OutputExtTest extends \PHPUnit_Framework_TestCase
         //file_put_contents(__DIR__ . '/../asset/value/vector-object.amf3', serialize($this->out->data));
         $data = unserialize(file_get_contents(__DIR__ . '/../../asset/value/vector-object.amf3'));
         $this->assertEquals($data, $this->out->data);
-    }
+    }*/
 
     /**
      *
      */
-    public function testwriteAmf3VectorObjectAndReference()
+    /*public function testwriteAmf3VectorObjectAndReference()
     {
         $this->out->setAvmPlus(true);
         $v1 = new stdClass();
@@ -1248,7 +1248,7 @@ class OutputExtTest extends \PHPUnit_Framework_TestCase
         //file_put_contents(__DIR__ . '/../asset/value/vector-object-and-reference.amf3', serialize($this->out->data));
         $data = unserialize(file_get_contents(__DIR__ . '/../../asset/value/vector-object-and-reference.amf3'));
         $this->assertEquals($data, $this->out->data);
-    }
+    }*/
 
     /**
      *
