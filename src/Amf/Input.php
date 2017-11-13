@@ -173,13 +173,24 @@ class Input extends AbstractInput
     {
         $obj = $this->resolveType($className);
         $this->objects0[] = &$obj;
-        $key = $this->readUtf();
-        $type = $this->readByte();
-        while ($type != Constants::AMF0_OBJECTEND) {
-            $value = $this->readAmf0ObjectValue($type);
-            $obj->$key = $value;
+        if (is_object($obj)) {
             $key = $this->readUtf();
             $type = $this->readByte();
+            while ($type != Constants::AMF0_OBJECTEND) {
+                $value = $this->readAmf0ObjectValue($type);
+                $obj->$key = $value;
+                $key = $this->readUtf();
+                $type = $this->readByte();
+            }
+        } else {
+            $key = $this->readUtf();
+            $type = $this->readByte();
+            while ($type != Constants::AMF0_OBJECTEND) {
+                $value = $this->readAmf0ObjectValue($type);
+                $obj[$key] = $value;
+                $key = $this->readUtf();
+                $type = $this->readByte();
+            }
         }
         return $obj;
     }
@@ -533,21 +544,41 @@ class Input extends AbstractInput
                 $obj = $this->readObject();
             } else {
                 $externalizedDataField = Constants::EXTERNALIZED_DATA_FIELD;
-                $obj->$externalizedDataField = $this->readObject();
+                if (is_object($obj)) {
+                    $obj->$externalizedDataField = $this->readObject();
+                } else {
+                    $obj[$externalizedDataField] = $this->readObject();
+                }
             }
         } else {
             $len = $ti->length();
-            for ($i = 0; $i < $len; $i++) {
-                $key = $ti->properties[$i];
-                $value = $this->readObject();
-                $obj->$key = $value;
-            }
-            if ($ti->dynamic) {
-                $key = $this->readAmf3String();
-                while ($key != '') {
+            if (is_object($obj)) {
+                for ($i = 0; $i < $len; $i++) {
+                    $key = $ti->properties[$i];
                     $value = $this->readObject();
                     $obj->$key = $value;
+                }
+                if ($ti->dynamic) {
                     $key = $this->readAmf3String();
+                    while ($key != '') {
+                        $value = $this->readObject();
+                        $obj->$key = $value;
+                        $key = $this->readAmf3String();
+                    }
+                }
+            } else {
+                for ($i = 0; $i < $len; $i++) {
+                    $key = $ti->properties[$i];
+                    $value = $this->readObject();
+                    $obj[$key] = $value;
+                }
+                if ($ti->dynamic) {
+                    $key = $this->readAmf3String();
+                    while ($key != '') {
+                        $value = $this->readObject();
+                        $obj[$key] = $value;
+                        $key = $this->readAmf3String();
+                    }
                 }
             }
         }

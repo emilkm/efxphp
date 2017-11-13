@@ -11,15 +11,9 @@ Extension or not, encoded output and decoded input are the same, and are OK by A
 
 Works on PHP 7.1
 
-Can be made to work on PHP 7.0 easily if needed. (Only using the convenience of handling multiple exceptions in single catch block, in a couple of places.)
 
 [![Build Status](https://travis-ci.org/emilkm/efxphp.svg?branch=master)](https://travis-ci.org/emilkm/efxphp)
 
-# PHP5
-
-No longer works on PHP 5.6 out of the box. (Can be made to if really necessary.)
-
-Unfortunately the PHP5 branch of amfext has a few outstanding memory leaks. Time to move to PHP 7+ :)
 
 # DONE
 

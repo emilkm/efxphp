@@ -10,6 +10,7 @@
 
 namespace emilkm\efxphp\Amf;
 
+use Error;
 use Exception;
 use stdClass;
 
@@ -47,6 +48,13 @@ abstract class AbstractInput
      * @var bool
      */
     protected $useInternalXmlDocumentType = true;
+
+    /**
+     * Decode typed object or associative array.
+     *
+     * @var bool
+     */
+    protected $decodeAmfObjectAsArray = false;
 
     /**
      * @var string The encoded data
@@ -125,6 +133,16 @@ abstract class AbstractInput
     public function setUseInternalXmlDocumentType($value)
     {
         $this->useInternalXmlDocumentType = $value;
+    }
+
+    /**
+     * Decode typed object or associative array.
+     *
+     * @param bool $value
+     */
+    public function setDecodeAmfObjectAsArray($value)
+    {
+        $this->decodeAmfObjectAsArray = $value;
     }
 
     /**
@@ -244,24 +262,38 @@ abstract class AbstractInput
      */
     protected function resolveType($className)
     {
-        $clazz = 'stdClass';
-        if ($className == '' || $className == 'Object') {
-            $obj = new $clazz();
-        } else {
-            if ($pos = strpos($className, 'flex.messaging.messages.') === 0) {
-                $class = substr($className, 24);
-                $clasx = 'emilkm\\efxphp\\Amf\\Messages\\' . $class;
+        if ($this->decodeAmfObjectAsArray && strpos($className, 'flex.messaging.messages.') === false) {
+            $arr = [];
+            if ($className != '' && $className != 'Object') {
+                $arr[Constants::REMOTE_CLASS_FIELD] = $className;
+            }
+            return $arr;
+        }
+
+        try {
+            $clazz = 'stdClass';
+            if ($className == '' || $className == 'Object') {
+                $obj = new $clazz();
             } else {
-                $clasx = str_replace('.', '\\', $className);
+                /*if ($pos = strpos($className, 'flex.messaging.messages.') === 0) {
+                    $class = substr($className, 24);
+                    $clasx = 'emilkm\\efxphp\\Amf\\Messages\\' . $class;
+                } else {*/
+                    $clasx = str_replace('.', '\\', $className);
+                //}
+                if (class_exists($clasx)) {
+                    $clazz = $clasx;
+                }
+                $obj = new $clazz();
+                if ($clazz == 'stdClass') {
+                    $remoteClassField = Constants::REMOTE_CLASS_FIELD;
+                    $obj->$remoteClassField = $className;
+                }
             }
-            if (class_exists($clasx)) {
-                $clazz = $clasx;
-            }
-            $obj = new $clazz();
-            if ($clazz == 'stdClass') {
-                $remoteClassField = Constants::REMOTE_CLASS_FIELD;
-                $obj->$remoteClassField = $className;
-            }
+        } catch (Exception | Error $e) {
+            $obj = new stdClass();
+            $remoteClassField = Constants::REMOTE_CLASS_FIELD;
+            $obj->$remoteClassField = $className;
         }
         return $obj;
     }

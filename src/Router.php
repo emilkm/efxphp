@@ -60,8 +60,6 @@ class Router
      * @param ActionContext   $actionContext
      * @param RemotingMessage $message
      * @param bool            $skipReflection
-     *
-     * @throws Exception 
      */
     public function find($actionContext, $message, $skipReflection)
     {
@@ -89,6 +87,7 @@ class Router
             $ex = new Exception('Service not found.');
             $actionContext->errors[$actionContext->messageIndex] = $ex;
             throw $ex;
+            //return;
         }
 
         $actionContext->classMetadata[$actionContext->messageIndex]['classAndPackage'] = $message->source;
@@ -203,6 +202,7 @@ class Router
             $ex = new Exception("Error while parsing comments of `$className` class. " . $e->getMessage());
             $actionContext->errors[$actionContext->messageIndex] = $ex;
             throw $ex;
+            //return;
         }
     }
 

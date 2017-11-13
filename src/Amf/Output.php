@@ -100,7 +100,7 @@ class Output extends AbstractOutput
             return;
         } elseif (is_float($value)) {
             if ($value > Constants::AMF_U32_MAX) {
-                // BlazeDS checks for  BigInteger or BigDecimal here. For consistency 
+                // BlazeDS checks for BigInteger or BigDecimal here. For consistency
                 // between 64bit and 32bit PHP and C we go with AMF_U32_MAX.
                 $this->writeAmf0String($value);
             } else {
@@ -282,6 +282,10 @@ class Output extends AbstractOutput
 
     protected function writeAmf0Array(array $value)
     {
+        //Referencing is disabled in arrays because
+        //if the array contains only primitive values,
+        //then the identity operator === will say that the two arrays are strictly equal
+        //when they contain the same values, even though they may be distinct.
         $count = count($this->objects0);
         if ($count <= Constants::MAX_STORED_OBJECTS) {
             $this->objects0[$count] = &$value;
@@ -649,6 +653,8 @@ class Output extends AbstractOutput
                 $ref = $ti['reference'] << 2 | 1;
                 $this->writeAmf3UInt29($ref);
             } else {
+                //bogus traits entry
+                $this->traits[] = array();
                 $dynamic = true;
                 $ref = Constants::AMF3_OBJECT_ENCODING | ($externalizable ? 4 : 0) | ($dynamic ? 8 : 0) | (0 << 4);
                 $this->writeAmf3UInt29($ref);
@@ -692,7 +698,7 @@ class Output extends AbstractOutput
         if ($writeTypeMarker == true) {
             $this->data .= "\12"; //$this->writeByte(Constants::AMF3_OBJECT);
         }
-        //bogus class traits entry
+        //bogus traits entry
         $this->traits[] = array();
         //anonymous object. So type this as a dynamic object with no sealed members.
         //U29O-traits : 1011.

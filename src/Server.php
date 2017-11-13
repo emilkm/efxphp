@@ -253,6 +253,8 @@ class Server
             } else {
                 if (isset($_REQUEST['sID'])) {
                     $sessionId = $_REQUEST['sID'];
+                } elseif (isset($_REQUEST['sid'])) { //HACK: Remove when we get rid of Flex, other clients should be able to supply correct case sID
+                    $sessionId = $_REQUEST['sid'];
                 }
             }
         }
@@ -303,9 +305,9 @@ class Server
                 $this->route($requestMessage);
                 $serviceInstance = $this->authorize($requestMessage);
                 $this->validate($requestMessage);
-                $this->invoke($requestMessage, $responseMessage, $serviceInstance);
+                $this->invoke($requestMessage, $responseMessage);
                 $responseBody->targetURI .= Constants::RESULT_METHOD;
-            } catch (Exception | Error $e) {
+            } catch (Exception $e) {
                 $responseBody->targetURI .= Constants::STATUS_METHOD;
                 $responseBody->data = $errorMessage = new ErrorMessage($requestMessage);
 
@@ -469,14 +471,18 @@ class Server
                     )
                 );
             } else {
-                $parameters = &$requestMessage->body;
+                $parameters = $requestMessage->body;
+                $paramrefs = [];
+                foreach ($parameters as $key => $value) {
+                    $paramrefs[$key] = &$parameters[$key];
+                }
 
                 $result = call_user_func_array(
                     array(
                         $serviceInstance,
                         $methodName,
                     ),
-                    $parameters
+                    $paramrefs
                 );
             }
 
@@ -485,7 +491,8 @@ class Server
                 if ($result instanceof $className) {
                     $response = $result;
                 } else {
-                    $response = $this->dice->create($className, [$result, null]);
+                    //HACK: Third parameter only for Artena Flex. Remove when we get rid of Flex or returnFaultAsResult logic.
+                    $response = $this->dice->create($className, [$result, null, null]);
                 }
                 $responseMessage->body = $response;
             } else {

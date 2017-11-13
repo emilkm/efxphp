@@ -19,16 +19,28 @@ class Request
     public $source;
     public $operation;
     public $params;
+    public $onResult;
+    public $onStatus;
+    public $token;
+    public $holdQueue;
 
     /**
      * @param string   $source
      * @param stirng   $operation
      * @param mixed    $params
+     * @param callable $onResult
+     * @param callable $onStatus
+     * @param mixed    $token
+     * @param bool     $holdQueue
      */
-    public function __construct($source, $operation, $params)
+    public function __construct($source, $operation, $params, $onResult, $onStatus, $token = null, $holdQueue = false)
     {
         $this->source = $source;
         $this->operation = $operation;
         $this->params = $params;
+        $this->onResult = $onResult;
+        $this->onStatus = $onStatus;
+        $this->token = $token;
+        $this->holdQueue = $holdQueue;
     }
 }

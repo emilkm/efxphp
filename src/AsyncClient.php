@@ -66,6 +66,7 @@ class Client
     public $remoteLogin = null;
 
     public $requestTimeout = self::REQUEST_TIMEOUT;
+    public $messageQueue = array();
 
     public $destination = '';
     public $endpoint = '';
@@ -128,7 +129,7 @@ class Client
      * @param string $sessionId
      * @param bool   $releaseQueue
      */
-    public function setSessionId($sessionId)
+    public function setSessionId($sessionId, $releaseQueue = false)
     {
         $this->sessionId = $sessionId;
 
@@ -137,17 +138,32 @@ class Client
         } else {
             $this->endpoint .= '?sID=' . $this->sessionId;
         }
+
+        if ($releaseQueue) {
+            $this->releaseQueue();
+        }
+    }
+
+    /**
+     * Resume processing of the request queue, which may have be put on hold.
+     */
+    public function releaseQueue()
+    {
+        if (!$this->request->holdQueue) {
+            return;
+        }
+        $this->processQueue();
     }
 
     /**
      * @param callable $onResult
      * @param callable $onStatus
      */
-    public function ping()
+    public function ping(callable $onResult, callable $onStatus)
     {
-        if ($this->clientId == null && $this->sequence == 0) {
-            $pingRequest = new Request('command', 'ping', array());
-            return $this->send($pingRequest);
+        if ($this->clientId == null && $this->sequence == 0 && count($this->messageQueue) == 0) {
+            $this->messageQueue[] = new Request('command', 'ping', array(), $onResult, $onStatus, 'command.ping');
+            $this->processQueue();
         }
     }
 
@@ -160,17 +176,33 @@ class Client
      * @param mixed    $token
      * @param bool     $holdQueue
      */
-    public function invoke($source, $operation, $params)
+    public function invoke($source, $operation, $params, callable $onResult, callable $onStatus, $token = null, $holdQueue = false)
     {
         $params = $this->safeParams($params);
-        if ($this->clientId == null && $this->sequence == 0) {
-            $response = $this->ping();
-            if ($response instanceof ResponseError) {
-                return $response;
+        if ($this->clientId == null && $this->sequence == 0 && count($this->messageQueue) == 0) {
+            $this->messageQueue[] = new Request('command', 'ping', array(), $onResult, $onStatus, 'command.ping');
+            $this->messageQueue[] = new Request($source, $operation, $params, $onResult, $onStatus, $token, $holdQueue);
+            $this->processQueue();
+            return;
+        }
+        $this->messageQueue[] = new Request($source, $operation, $params, $onResult, $onStatus, $token, $holdQueue);
+        if ($this->clientId == null || ($this->request != null && $this->request->holdQueue)) {
+            return;
+        }
+        $this->processQueue();
+    }
+
+    private function processQueue()
+    {
+        while (count($this->messageQueue) > 0) {
+            $this->request = array_shift($this->messageQueue);
+            if ($this->sequence == 1 || ($this->request != null && $this->request->holdQueue)) {
+                $this->send($this->request);
+                return;
+            } else {
+                $this->send($this->request);
             }
         }
-        $request = new Request($source, $operation, $params);
-        return $this->send($request);
     }
 
     private function createMessage(Request $request)
@@ -215,7 +247,8 @@ class Client
             'status' => '',
             'error' => false,
             'headers' => array(),
-            'data' => null
+            'data' => null,
+            'token' => $request->token
         );
 
         // Basic setup
@@ -262,35 +295,42 @@ class Client
 
 
         if ($this->response->error !== false) {
-            return $this->response->error;
+            call_user_func_array($request->onStatus, array($this->response->error, $this->response->token));
+            return;
         } elseif ($this->response->status != 200) {
             $this->response->error = new ResponseError('HTTP status not 200.');
-            return $this->response->error;
+            call_user_func_array($request->onStatus, array($this->response->error, $this->response->token));
+            return;
         } elseif (!isset($this->response->headers['content-type'])
             || (isset($this->response->headers['content-type']) && strpos($this->response->headers['content-type'], 'application/x-amf') === false)
         ) {
             $this->response->error = new ResponseError('Unsupported content type.', 1, $this->response->headers['content-type']);
-            return $this->response->error;
+            call_user_func_array($request->onStatus, array($this->response->error, $this->response->token));
+            return;
         }
 
         if (isset($this->response->headers['content-encoding'])) {
             if (strtolower($this->response->headers['content-encoding']) == 'gzip') {
                 if (!function_exists('gzdecode')) {
                     $this->response->error = new ResponseError('Cannot decode the response data.', 1, 'gzdecode not available.');
-                    return $this->response->error;
+                    call_user_func_array($request->onStatus, array($this->response->error, $this->response->token));
+                    return;
                 }
                 if (!($decoded = @gzdecode($this->response->data))) {
                     $this->response->error = new ResponseError('Failed to decode the response data.', 1, 'gzdecode failed.');
-                    return $this->response->error;
+                    call_user_func_array($request->onStatus, array($this->response->error, $this->response->token));
+                    return;
                 }
             } elseif (strtolower($this->response->headers['content-encoding']) == 'deflate') {
                 if (!function_exists('gzinflate')) {
                     $this->response->error = new ResponseError('Cannot decode the response data.', 1, 'gzinflate not available.');
-                    return $this->response->error;
+                    call_user_func_array($request->onStatus, array($this->response->error, $this->response->token));
+                    return;
                 }
                 if (!($decoded = @gzinflate($this->response->data))) {
                     $this->response->error = new ResponseError('Failed to decode the response data.', 1, 'gzinflate failed.');
-                    return $this->response->error;
+                    call_user_func_array($request->onStatus, array($this->response->error, $this->response->token));
+                    return;
                 }
             }
             $this->response->data = $decoded;
@@ -300,14 +340,16 @@ class Client
             $inMessage = $this->deserializer->readMessage($this->response->data);
         } catch (Exception $e) {
             $this->response->error = new ResponseError('Failed to deserialize response data.', 2, $e->getMessage());
-            return $this->response->error;
+            call_user_func_array($request->onStatus, array($this->response->error, $this->response->token));
+            return;
         }
 
         $bodyCount = $inMessage->getBodyCount();
 
         if ($bodyCount == 0) {
             $this->response->error = new ResponseError('Malformed AMF packet.', 3, 'Missing AMF body.');
-            return $this->response->error;
+            call_user_func_array($request->onStatus, array($this->response->error, $this->response->token));
+            return;
         }
 
         $responseBody = $inMessage->getBody(0);
@@ -316,30 +358,39 @@ class Client
             $responseMessage = $responseBody->getDataAsMessage();
         } catch (Exception $e) {
             $this->response->error = new ResponseError('Malformed AMF packet.', 4, 'Unsupported AMF message type.');
-            return $this->response->error;
+            call_user_func_array($request->onStatus, array($this->response->error, $this->response->token));
+            return;
         }
 
         if (!($responseMessage instanceof AcknowledgeMessage) && !($responseMessage instanceof ErrorMessage)) {
             $this->response->error = new ResponseError('Malformed AMF packet.', 5, 'Unexpected AMF message type.');
-            return $this->response->error;
+            call_user_func_array($request->onStatus, array($this->response->error, $this->response->token));
+            return;
         }
 
         if ($responseMessage instanceof ErrorMessage) {
             $this->response->error = new ResponseError($responseMessage->faultString, $responseMessage->faultCode, $responseMessage->faultDetail);
-            return $this->response->error;
+            call_user_func_array($request->onStatus, array($this->response->error, $this->response->token));
+            return;
         }
 
         if ($responseBody->targetURI == '/1/onResult') {
             $this->clientId = $responseMessage->clientId;
-            return $responseMessage->body;
+            $this->processQueue();
         } elseif ($responseMessage->body instanceof Response && $responseMessage->body->code < 0) {
             $this->response->error = new ResponseError($responseMessage->body->message, $responseMessage->body->code, $responseMessage->body->detail);
-            return $this->response->error;
+            call_user_func_array($request->onStatus, array($this->response->error, $this->response->token));
         } elseif (isset($responseMessage->body->type) && $responseMessage->body->type == -1) {
             $this->response->error = new ResponseError($responseMessage->body->message, $responseMessage->body->code, $responseMessage->body->detail);
-            return $this->response->error;
+            call_user_func_array($request->onStatus, array($this->response->error, $this->response->token));
         } else {
-            return $responseMessage->body;
+            if ($request->holdQueue) {
+                call_user_func_array($request->onResult, array($responseMessage->body, $this->response->token));
+                //caller must release the queue
+            } else {
+                call_user_func_array($request->onResult, array($responseMessage->body, $this->response->token));
+                $this->processQueue();
+            }
         }
     }
 

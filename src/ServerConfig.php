@@ -17,6 +17,7 @@ namespace emilkm\efxphp;
  * List properties for intellisense in some IDEs
  *
  * @property string $serverOperationMode
+ * @property bool $returnFaultAsResult
  * @property string $servicesRootDirectory
  * @property string $servicesRootNamespace
  * @property string $cacheDirectory
@@ -40,7 +41,7 @@ class ServerConfig extends AbstractConfig
      *
      * @var string
      */
-    protected $serverOperationMode = OPMODE_PRODUCTION;
+    protected $serverOperationMode = ServerConfig::OPMODE_PRODUCTION;
 
     /**
      * @var string The root directory where services and VOs are located.

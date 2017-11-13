@@ -11,11 +11,11 @@
 namespace emilkm\efxphp\Amf;
 
 use emilkm\efxphp\Amf\Constants;
-use emilkm\efxphp\Amf\Messages\AbstractMessage;
-use emilkm\efxphp\Amf\Messages\AcknowledgeMessage;
-use emilkm\efxphp\Amf\Messages\CommandMessage;
-use emilkm\efxphp\Amf\Messages\ErrorMessage;
-use emilkm\efxphp\Amf\Messages\RemotingMessage;
+use flex\messaging\messages\AbstractMessage;
+use flex\messaging\messages\AcknowledgeMessage;
+use flex\messaging\messages\CommandMessage;
+use flex\messaging\messages\ErrorMessage;
+use flex\messaging\messages\RemotingMessage;
 
 use Exception;
 use stdClass;

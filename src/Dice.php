@@ -214,7 +214,7 @@ class Dice
                 }
                 return $object;
             }
-            : $closure;
+            : Closure::fromCallable($closure);
     }
 
 	/**
@@ -265,7 +265,7 @@ class Dice
         }
 
         //Return a closure that uses the cached information to generate the arguments for the method
-        return function (array $args, array $share = []) use ($paramInfo, $rule) {
+        return Closure::fromCallable(function (array $args, array $share = []) use ($paramInfo, $rule) {
             //Now merge all the possible parameters: user-defined in the rule via constructParams, shared instances and the $args argument from $dice->create();
             if ($share || isset($rule['constructParams'])) {
                 $args = array_merge(
@@ -311,6 +311,6 @@ class Dice
             }
             //variadic functions will only have one argument. To account for those, append any remaining arguments to the list
             return $parameters;
-        };
+        });
     }
 }
