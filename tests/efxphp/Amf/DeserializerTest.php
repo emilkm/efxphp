@@ -14,6 +14,9 @@ use emilkm\efxphp\Amf\Constants;
 use emilkm\efxphp\Amf\Deserializer;
 use emilkm\efxphp\Amf\Input;
 use emilkm\efxphp\Amf\InputExt;
+use flex\messaging\messages\CommandMessage;
+use flex\messaging\messages\RemotingMessage;
+use flex\messaging\messages\AcknowledgeMessage;
 
 /**
  * @author     Emil Malinov

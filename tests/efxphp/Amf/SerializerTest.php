@@ -17,9 +17,9 @@ use emilkm\efxphp\Amf\Output;
 use emilkm\efxphp\Amf\OutputExt;
 use emilkm\efxphp\Amf\ActionMessage;
 use emilkm\efxphp\Amf\MessageBody;
-use emilkm\efxphp\Amf\Messages\AcknowledgeMessage;
-use emilkm\efxphp\Amf\Messages\CommandMessage;
-use emilkm\efxphp\Amf\Messages\RemotingMessage;
+use flex\messaging\messages\AcknowledgeMessage;
+use flex\messaging\messages\CommandMessage;
+use flex\messaging\messages\RemotingMessage;
 
 /**
  * @author     Emil Malinov
