@@ -921,7 +921,7 @@ class InputExtTest extends \PHPUnit_Framework_TestCase
     /**
      *
      */
-    public function testreadAmf3VectorInt()
+    /*public function testreadAmf3VectorInt()
     {
         $exp = array(1, 2, 3);
         $data = unserialize(file_get_contents(__DIR__ . '/../../asset/value/vector-int.amf3'));
@@ -931,12 +931,12 @@ class InputExtTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(Constants::AMF3_VECTOR_INT, $obj->value->type);
         $this->assertEquals(false, $obj->value->fixed);
         $this->assertEquals($exp, $obj->value->data);
-    }
+    }*/
 
     /**
      *
      */
-    public function testreadAmf3VectorIntNegative()
+    /*public function testreadAmf3VectorIntNegative()
     {
         $exp = array(-3, -2, -1);
         $data = unserialize(file_get_contents(__DIR__ . '/../../asset/value/vector-int-negative.amf3'));
@@ -946,12 +946,12 @@ class InputExtTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(Constants::AMF3_VECTOR_INT, $obj->value->type);
         $this->assertEquals(false, $obj->value->fixed);
         $this->assertEquals($exp, $obj->value->data);
-    }
+    }*/
 
     /**
      *
      */
-    public function testreadAmf3VectorUint()
+    /*public function testreadAmf3VectorUint()
     {
         $exp = array(2147483647, 2147483648, 4294967295);
         $data = unserialize(file_get_contents(__DIR__ . '/../../asset/value/vector-uint.amf3'));
@@ -961,12 +961,12 @@ class InputExtTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(Constants::AMF3_VECTOR_UINT, $obj->value->type);
         $this->assertEquals(false, $obj->value->fixed);
         $this->assertEquals($exp, $obj->value->data);
-    }
+    }*/
 
     /**
      *
      */
-    public function testreadAmf3VectorDouble()
+    /*public function testreadAmf3VectorDouble()
     {
         $exp = array(-31.57, 0, 31.57);
         $data = unserialize(file_get_contents(__DIR__ . '/../../asset/value/vector-double.amf3'));
@@ -976,12 +976,12 @@ class InputExtTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(Constants::AMF3_VECTOR_DOUBLE, $obj->value->type);
         $this->assertEquals(false, $obj->value->fixed);
         $this->assertEquals($exp, $obj->value->data);
-    }
+    }*/
 
     /**
      *
      */
-    public function testreadAmf3VectorObject()
+    /*public function testreadAmf3VectorObject()
     {
         $v1 = new stdClass();
         $v1->value = 1;
@@ -997,12 +997,12 @@ class InputExtTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(Constants::AMF3_VECTOR_OBJECT, $obj->value->type);
         $this->assertEquals(false, $obj->value->fixed);
         $this->assertEquals($exp, $obj->value->data);
-    }
+    }*/
 
     /**
      *
      */
-    public function testreadAmf3VectorObjectAndReference()
+    /*public function testreadAmf3VectorObjectAndReference()
     {
         $v1 = new stdClass();
         $v1->value = 1;
@@ -1023,7 +1023,7 @@ class InputExtTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(false, $obj->value2->fixed);
         $this->assertEquals($exp, $obj->value1->data);
         $this->assertEquals($exp, $obj->value2->data);
-    }
+    }*/
 
     /**
      *
