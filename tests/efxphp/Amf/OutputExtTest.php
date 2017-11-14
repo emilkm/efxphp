@@ -1144,7 +1144,7 @@ class OutputExtTest extends \PHPUnit_Framework_TestCase
     /**
      *
      */
-    /*public function testwriteAmf3VectorInt()
+    public function testwriteAmf3VectorInt()
     {
         $this->out->setAvmPlus(true);
         $obj = new stdClass();
@@ -1155,12 +1155,12 @@ class OutputExtTest extends \PHPUnit_Framework_TestCase
         //file_put_contents(__DIR__ . '/../asset/value/vector-int.amf3', serialize($this->out->data));
         $data = unserialize(file_get_contents(__DIR__ . '/../../asset/value/vector-int.amf3'));
         $this->assertEquals($data, $this->out->data);
-    }*/
+    }
 
     /**
      *
      */
-    /*public function testwriteAmf3VectorIntNegative()
+    public function testwriteAmf3VectorIntNegative()
     {
         $this->out->setAvmPlus(true);
         $obj = new stdClass();
@@ -1171,12 +1171,12 @@ class OutputExtTest extends \PHPUnit_Framework_TestCase
         //file_put_contents(__DIR__ . '/../asset/value/vector-int-negative.amf3', serialize($this->out->data));
         $data = unserialize(file_get_contents(__DIR__ . '/../../asset/value/vector-int-negative.amf3'));
         $this->assertEquals($data, $this->out->data);
-    }*/
+    }
 
     /**
      *
      */
-    /*public function testwriteAmf3VectorUint()
+    public function testwriteAmf3VectorUint()
     {
         $this->out->setAvmPlus(true);
         $obj = new stdClass();
@@ -1187,12 +1187,12 @@ class OutputExtTest extends \PHPUnit_Framework_TestCase
         //file_put_contents(__DIR__ . '/../asset/value/vector-uint.amf3', serialize($this->out->data));
         $data = unserialize(file_get_contents(__DIR__ . '/../../asset/value/vector-uint.amf3'));
         $this->assertEquals($data, $this->out->data);
-    }*/
+    }
 
     /**
      *
      */
-    /*public function testwriteAmf3VectorDouble()
+    public function testwriteAmf3VectorDouble()
     {
         $this->out->setAvmPlus(true);
         $obj = new stdClass();
@@ -1203,12 +1203,12 @@ class OutputExtTest extends \PHPUnit_Framework_TestCase
         //file_put_contents(__DIR__ . '/../asset/value/vector-double.amf3', serialize($this->out->data));
         $data = unserialize(file_get_contents(__DIR__ . '/../../asset/value/vector-double.amf3'));
         $this->assertEquals($data, $this->out->data);
-    }*/
+    }
 
     /**
      *
      */
-    /*public function testwriteAmf3VectorObject()
+    public function testwriteAmf3VectorObject()
     {
         $this->out->setAvmPlus(true);
         $v1 = new stdClass();
@@ -1225,12 +1225,12 @@ class OutputExtTest extends \PHPUnit_Framework_TestCase
         //file_put_contents(__DIR__ . '/../asset/value/vector-object.amf3', serialize($this->out->data));
         $data = unserialize(file_get_contents(__DIR__ . '/../../asset/value/vector-object.amf3'));
         $this->assertEquals($data, $this->out->data);
-    }*/
+    }
 
     /**
      *
      */
-    /*public function testwriteAmf3VectorObjectAndReference()
+    public function testwriteAmf3VectorObjectAndReference()
     {
         $this->out->setAvmPlus(true);
         $v1 = new stdClass();
@@ -1248,7 +1248,7 @@ class OutputExtTest extends \PHPUnit_Framework_TestCase
         //file_put_contents(__DIR__ . '/../asset/value/vector-object-and-reference.amf3', serialize($this->out->data));
         $data = unserialize(file_get_contents(__DIR__ . '/../../asset/value/vector-object-and-reference.amf3'));
         $this->assertEquals($data, $this->out->data);
-    }*/
+    }
 
     /**
      *
