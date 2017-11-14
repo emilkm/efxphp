@@ -8,6 +8,7 @@ $autoLoader = new ClassLoader();
 $autoLoader->setUseIncludePath(true);
 $autoLoader->addPsr4('emilkm\\efxphp\\', BASE . 'src/');
 $autoLoader->addPsr4('emilkm\\tests\\', BASE . 'tests/');
+$autoLoader->addPsr4('flex\\messaging\\messages\\', BASE . 'src/Amf/flex/messaging/messages/');
 
 if (file_exists(BASE . 'vendor/autoload.php')) {
 
