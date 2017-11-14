@@ -43,7 +43,7 @@ class DeserializerTest extends \PHPUnit_Framework_TestCase
         $message = $this->deserializer->readMessage($data);
         $this->assertInstanceOf('emilkm\efxphp\Amf\ActionMessage', $message);
         $this->assertInstanceOf('emilkm\efxphp\Amf\MessageBody', $message->bodies[0]);
-        $this->assertInstanceOf('emilkm\efxphp\Amf\Messages\CommandMessage', $message->bodies[0]->data);
+        $this->assertInstanceOf('flex\messaging\messages\CommandMessage', $message->bodies[0]->data);
         $this->assertEquals('63FCE70D-F447-ED49-83E6-00001695D4AF', $message->bodies[0]->data->messageId);
         $this->assertEquals('1437179933687', $message->bodies[0]->data->timestamp);
     }
@@ -57,7 +57,7 @@ class DeserializerTest extends \PHPUnit_Framework_TestCase
         $message = $this->deserializerExt->readMessage($data);
         $this->assertInstanceOf('emilkm\efxphp\Amf\ActionMessage', $message);
         $this->assertInstanceOf('emilkm\efxphp\Amf\MessageBody', $message->bodies[0]);
-        $this->assertInstanceOf('emilkm\efxphp\Amf\Messages\CommandMessage', $message->bodies[0]->data);
+        $this->assertInstanceOf('flex\messaging\messages\CommandMessage', $message->bodies[0]->data);
         $this->assertEquals('63FCE70D-F447-ED49-83E6-00001695D4AF', $message->bodies[0]->data->messageId);
         $this->assertEquals('1437179933687', $message->bodies[0]->data->timestamp);
     }
@@ -71,7 +71,7 @@ class DeserializerTest extends \PHPUnit_Framework_TestCase
         $message = $this->deserializer->readMessage($data);
         $this->assertInstanceOf('emilkm\efxphp\Amf\ActionMessage', $message);
         $this->assertInstanceOf('emilkm\efxphp\Amf\MessageBody', $message->bodies[0]);
-        $this->assertInstanceOf('emilkm\efxphp\Amf\Messages\CommandMessage', $message->bodies[0]->data);
+        $this->assertInstanceOf('flex\messaging\messages\CommandMessage', $message->bodies[0]->data);
         $this->assertEquals('63FCE70D-F447-ED49-83E6-00001695D4AF', $message->bodies[0]->data->messageId);
         $this->assertEquals('1437179933687', $message->bodies[0]->data->timestamp);
     }
@@ -85,7 +85,7 @@ class DeserializerTest extends \PHPUnit_Framework_TestCase
         $message = $this->deserializerExt->readMessage($data);
         $this->assertInstanceOf('emilkm\efxphp\Amf\ActionMessage', $message);
         $this->assertInstanceOf('emilkm\efxphp\Amf\MessageBody', $message->bodies[0]);
-        $this->assertInstanceOf('emilkm\efxphp\Amf\Messages\CommandMessage', $message->bodies[0]->data);
+        $this->assertInstanceOf('flex\messaging\messages\CommandMessage', $message->bodies[0]->data);
         $this->assertEquals('63FCE70D-F447-ED49-83E6-00001695D4AF', $message->bodies[0]->data->messageId);
         $this->assertEquals('1437179933687', $message->bodies[0]->data->timestamp);
     }
@@ -99,7 +99,7 @@ class DeserializerTest extends \PHPUnit_Framework_TestCase
         $message = $this->deserializer->readMessage($data);
         $this->assertInstanceOf('emilkm\efxphp\Amf\ActionMessage', $message);
         $this->assertInstanceOf('emilkm\efxphp\Amf\MessageBody', $message->bodies[0]);
-        $this->assertInstanceOf('emilkm\efxphp\Amf\Messages\RemotingMessage', $message->bodies[0]->data);
+        $this->assertInstanceOf('flex\messaging\messages\RemotingMessage', $message->bodies[0]->data);
         $this->assertEquals('F9F98C89-5099-E7BF-7997-9B41FC79A0D4', $message->bodies[0]->data->clientId);
         $this->assertEquals('F9F98C89-5099-E7BF-7997-9B41FC79A0D4', $message->bodies[0]->data->headers->DSId);
         $this->assertEquals('63FCE70D-F447-ED49-83E6-00001695D4AF', $message->bodies[0]->data->messageId);
@@ -117,7 +117,7 @@ class DeserializerTest extends \PHPUnit_Framework_TestCase
         $message = $this->deserializerExt->readMessage($data);
         $this->assertInstanceOf('emilkm\efxphp\Amf\ActionMessage', $message);
         $this->assertInstanceOf('emilkm\efxphp\Amf\MessageBody', $message->bodies[0]);
-        $this->assertInstanceOf('emilkm\efxphp\Amf\Messages\RemotingMessage', $message->bodies[0]->data);
+        $this->assertInstanceOf('flex\messaging\messages\RemotingMessage', $message->bodies[0]->data);
         $this->assertEquals('F9F98C89-5099-E7BF-7997-9B41FC79A0D4', $message->bodies[0]->data->clientId);
         $this->assertEquals('F9F98C89-5099-E7BF-7997-9B41FC79A0D4', $message->bodies[0]->data->headers->DSId);
         $this->assertEquals('63FCE70D-F447-ED49-83E6-00001695D4AF', $message->bodies[0]->data->messageId);
@@ -135,7 +135,7 @@ class DeserializerTest extends \PHPUnit_Framework_TestCase
         $message = $this->deserializer->readMessage($data);
         $this->assertInstanceOf('emilkm\efxphp\Amf\ActionMessage', $message);
         $this->assertInstanceOf('emilkm\efxphp\Amf\MessageBody', $message->bodies[0]);
-        $this->assertInstanceOf('emilkm\efxphp\Amf\Messages\RemotingMessage', $message->bodies[0]->data);
+        $this->assertInstanceOf('flex\messaging\messages\RemotingMessage', $message->bodies[0]->data);
         $this->assertEquals('F9F98C89-5099-E7BF-7997-9B41FC79A0D4', $message->bodies[0]->data->clientId);
         $this->assertEquals('F9F98C89-5099-E7BF-7997-9B41FC79A0D4', $message->bodies[0]->data->headers->DSId);
         $this->assertEquals('63FCE70D-F447-ED49-83E6-00001695D4AF', $message->bodies[0]->data->messageId);
@@ -153,7 +153,7 @@ class DeserializerTest extends \PHPUnit_Framework_TestCase
         $message = $this->deserializerExt->readMessage($data);
         $this->assertInstanceOf('emilkm\efxphp\Amf\ActionMessage', $message);
         $this->assertInstanceOf('emilkm\efxphp\Amf\MessageBody', $message->bodies[0]);
-        $this->assertInstanceOf('emilkm\efxphp\Amf\Messages\RemotingMessage', $message->bodies[0]->data);
+        $this->assertInstanceOf('flex\messaging\messages\RemotingMessage', $message->bodies[0]->data);
         $this->assertEquals('F9F98C89-5099-E7BF-7997-9B41FC79A0D4', $message->bodies[0]->data->clientId);
         $this->assertEquals('F9F98C89-5099-E7BF-7997-9B41FC79A0D4', $message->bodies[0]->data->headers->DSId);
         $this->assertEquals('63FCE70D-F447-ED49-83E6-00001695D4AF', $message->bodies[0]->data->messageId);
@@ -171,7 +171,7 @@ class DeserializerTest extends \PHPUnit_Framework_TestCase
         $message = $this->deserializer->readMessage($data);
         $this->assertInstanceOf('emilkm\efxphp\Amf\ActionMessage', $message);
         $this->assertInstanceOf('emilkm\efxphp\Amf\MessageBody', $message->bodies[0]);
-        $this->assertInstanceOf('emilkm\efxphp\Amf\Messages\AcknowledgeMessage', $message->bodies[0]->data);
+        $this->assertInstanceOf('flex\messaging\messages\AcknowledgeMessage', $message->bodies[0]->data);
         $this->assertEquals('3182A13C-AF4A-A148-AA73-000028716D94', $message->bodies[0]->data->clientId);
         $this->assertEquals('3182A13C-AF4A-A148-AA73-000028716D94', $message->bodies[0]->data->headers->DSId);
         $this->assertEquals('B1510529-D1A0-6A62-25DA-A00B1BF47BF6', $message->bodies[0]->data->messageId);
@@ -188,7 +188,7 @@ class DeserializerTest extends \PHPUnit_Framework_TestCase
         $message = $this->deserializerExt->readMessage($data);
         $this->assertInstanceOf('emilkm\efxphp\Amf\ActionMessage', $message);
         $this->assertInstanceOf('emilkm\efxphp\Amf\MessageBody', $message->bodies[0]);
-        $this->assertInstanceOf('emilkm\efxphp\Amf\Messages\AcknowledgeMessage', $message->bodies[0]->data);
+        $this->assertInstanceOf('flex\messaging\messages\AcknowledgeMessage', $message->bodies[0]->data);
         $this->assertEquals('3182A13C-AF4A-A148-AA73-000028716D94', $message->bodies[0]->data->clientId);
         $this->assertEquals('3182A13C-AF4A-A148-AA73-000028716D94', $message->bodies[0]->data->headers->DSId);
         $this->assertEquals('B1510529-D1A0-6A62-25DA-A00B1BF47BF6', $message->bodies[0]->data->messageId);
@@ -205,7 +205,7 @@ class DeserializerTest extends \PHPUnit_Framework_TestCase
         $message = $this->deserializer->readMessage($data);
         $this->assertInstanceOf('emilkm\efxphp\Amf\ActionMessage', $message);
         $this->assertInstanceOf('emilkm\efxphp\Amf\MessageBody', $message->bodies[0]);
-        $this->assertInstanceOf('emilkm\efxphp\Amf\Messages\AcknowledgeMessage', $message->bodies[0]->data);
+        $this->assertInstanceOf('flex\messaging\messages\AcknowledgeMessage', $message->bodies[0]->data);
         $this->assertEquals('3182A13C-AF4A-A148-AA73-000028716D94', $message->bodies[0]->data->clientId);
         $this->assertEquals('3182A13C-AF4A-A148-AA73-000028716D94', $message->bodies[0]->data->headers->DSId);
         $this->assertEquals('B1510529-D1A0-6A62-25DA-A00B1BF47BF6', $message->bodies[0]->data->messageId);
@@ -222,7 +222,7 @@ class DeserializerTest extends \PHPUnit_Framework_TestCase
         $message = $this->deserializerExt->readMessage($data);
         $this->assertInstanceOf('emilkm\efxphp\Amf\ActionMessage', $message);
         $this->assertInstanceOf('emilkm\efxphp\Amf\MessageBody', $message->bodies[0]);
-        $this->assertInstanceOf('emilkm\efxphp\Amf\Messages\AcknowledgeMessage', $message->bodies[0]->data);
+        $this->assertInstanceOf('flex\messaging\messages\AcknowledgeMessage', $message->bodies[0]->data);
         $this->assertEquals('3182A13C-AF4A-A148-AA73-000028716D94', $message->bodies[0]->data->clientId);
         $this->assertEquals('3182A13C-AF4A-A148-AA73-000028716D94', $message->bodies[0]->data->headers->DSId);
         $this->assertEquals('B1510529-D1A0-6A62-25DA-A00B1BF47BF6', $message->bodies[0]->data->messageId);
