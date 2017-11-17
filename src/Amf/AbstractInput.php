@@ -37,17 +37,17 @@ abstract class AbstractInput
     /**
      * @var bool
      */
-    protected $useInternalDateType = true;
+    protected $useRlandDateType = true;
 
     /**
      * @var bool
      */
-    protected $useInternalXmlType = true;
+    protected $useRlandXmlType = true;
 
     /**
      * @var bool
      */
-    protected $useInternalXmlDocumentType = true;
+    protected $useRlandXmlDocumentType = true;
 
     /**
      * Decode typed object or associative array.
@@ -110,9 +110,9 @@ abstract class AbstractInput
      *
      * @param bool $value
      */
-    public function setUseInternalDateType($value)
+    public function setUseRlandDateType($value)
     {
-        $this->useInternalDateType = $value;
+        $this->useRlandDateType = $value;
     }
 
     /**
@@ -120,9 +120,9 @@ abstract class AbstractInput
      *
      * @param bool $value
      */
-    public function setUseInternalXmlType($value)
+    public function setUseRlandXmlType($value)
     {
-        $this->useInternalXmlType = $value;
+        $this->useRlandXmlType = $value;
     }
 
     /**
@@ -130,9 +130,9 @@ abstract class AbstractInput
      *
      * @param bool $value
      */
-    public function setUseInternalXmlDocumentType($value)
+    public function setUseRlandXmlDocumentType($value)
     {
-        $this->useInternalXmlDocumentType = $value;
+        $this->useRlandXmlDocumentType = $value;
     }
 
     /**

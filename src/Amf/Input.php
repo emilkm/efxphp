@@ -239,14 +239,14 @@ class Input extends AbstractInput
     }
 
     /**
-     * @return emilkm\efxphp\Amf\Types\Xml|SimpleXMLElement depending on useInternalXmlType setting
+     * @return emilkm\efxphp\Amf\Types\Xml|SimpleXMLElement depending on useRlandXmlType setting
      */
     protected function readAmf0Xml()
     {
         $len = $this->readInt();
         $xmlstring = $this->readBytes($len);
         $value = simplexml_load_string($xmlstring);
-        if ($this->useInternalXmlType == true) {
+        if ($this->useRlandXmlType == true) {
             $value = new Xml($xmlstring);
         } else {
             $value = simplexml_load_string($xmlstring);
@@ -261,7 +261,7 @@ class Input extends AbstractInput
     {
         $amfdate = $this->readDouble();
         $this->skipBytes(2); //timezone offset is always 0, so no point to readShort()
-        if ($this->useInternalDateType == true) {
+        if ($this->useRlandDateType == true) {
             $value = new Date($amfdate);
         } else {
             $timestamp = $amfdate / 1000;
@@ -414,7 +414,7 @@ class Input extends AbstractInput
             return $this->getAmf3ObjectReference($ref >> 1);
         }
         $amfdate = $this->readDouble();
-        if ($this->useInternalDateType == true) {
+        if ($this->useRlandDateType == true) {
             $value = new Date($amfdate);
         } else {
             $timestamp = $amfdate / 1000;
@@ -446,7 +446,7 @@ class Input extends AbstractInput
     }
 
     /**
-     * @return emilkm\efxphp\Amf\Types\Xml|SimpleXMLElement depending on useInternalXmlType setting
+     * @return emilkm\efxphp\Amf\Types\Xml|SimpleXMLElement depending on useRlandXmlType setting
      */
     protected function readAmf3Xml()
     {
@@ -456,7 +456,7 @@ class Input extends AbstractInput
         }
         $len = $ref >> 1;
         $xmlstring = $this->readBytes($len);
-        if ($this->useInternalXmlType == true) {
+        if ($this->useRlandXmlType == true) {
             $value = new Xml($xmlstring);
         } else {
             $value = simplexml_load_string($xmlstring);
@@ -466,7 +466,7 @@ class Input extends AbstractInput
     }
 
     /**
-     * @return emilkm\efxphp\Amf\Types\XmlDocument|DOMElement depending on useInternalXmlDocumentType setting
+     * @return emilkm\efxphp\Amf\Types\XmlDocument|DOMElement depending on useRlandXmlDocumentType setting
      */
     protected function readAmf3XmlDocument()
     {
@@ -476,7 +476,7 @@ class Input extends AbstractInput
         }
         $len = $ref >> 1;
         $xmlstring = $this->readBytes($len);
-        if ($this->useInternalXmlDocumentType == true) {
+        if ($this->useRlandXmlDocumentType == true) {
             $value = new XmlDocument($xmlstring);
         } else {
             $value = dom_import_simplexml(simplexml_load_string($xmlstring));

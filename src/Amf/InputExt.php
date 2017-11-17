@@ -96,7 +96,7 @@ class InputExt extends AbstractInput
     {
         switch ($type) {
             case self::AMFC_DATE:
-                if ($this->useInternalDateType == true) {
+                if ($this->useRlandDateType == true) {
                     $value = new Date($arg);
                 } else {
                     $timestamp = $arg / 1000;
@@ -110,7 +110,7 @@ class InputExt extends AbstractInput
             case self::AMFC_BYTEARRAY:
                 return new ByteArray($arg);
             case self::AMFC_XML:
-                if ($this->useInternalXmlType == true) {
+                if ($this->useRlandXmlType == true) {
                     $value = new Xml($arg);
                 } else {
                     $value = simplexml_load_string($arg);
@@ -118,7 +118,7 @@ class InputExt extends AbstractInput
 
                 return $value;
             case self::AMFC_XMLDOCUMENT:
-                if ($this->useInternalXmlDocumentType == true) {
+                if ($this->useRlandXmlDocumentType == true) {
                     $value = new XmlDocument($arg);
                 } else {
                     $value = dom_import_simplexml(simplexml_load_string($arg));

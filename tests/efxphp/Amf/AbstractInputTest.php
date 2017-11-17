@@ -42,52 +42,52 @@ class AbstractInputTest extends \PHPUnit_Framework_TestCase
     /**
      *
      */
-    public function testuseInternalDateTypeDefaultIsTrue()
+    public function testuseRlandDateTypeDefaultIsTrue()
     {
-        $this->assertEquals(true, $this->getPropertyValue($this->in, 'useInternalDateType'));
+        $this->assertEquals(true, $this->getPropertyValue($this->in, 'useRlandDateType'));
     }
 
     /**
      *
      */
-    public function testsetUseInternalDateTypeToFalse()
+    public function testsetUseRlandDateTypeToFalse()
     {
-        $this->in->setUseInternalDateType(false);
-        $this->assertEquals(false, $this->getPropertyValue($this->in, 'useInternalDateType'));
+        $this->in->setUseRlandDateType(false);
+        $this->assertEquals(false, $this->getPropertyValue($this->in, 'useRlandDateType'));
     }
 
     /**
      *
      */
-    public function testuseInternalXmlTypeDefaultIsTrue()
+    public function testuseRlandXmlTypeDefaultIsTrue()
     {
-        $this->assertEquals(true, $this->getPropertyValue($this->in, 'useInternalXmlType'));
+        $this->assertEquals(true, $this->getPropertyValue($this->in, 'useRlandXmlType'));
     }
 
     /**
      *
      */
-    public function testsetUseInternalXmlTypeToFalse()
+    public function testsetUseRlandXmlTypeToFalse()
     {
-        $this->in->setUseInternalXmlType(false);
-        $this->assertEquals(false, $this->getPropertyValue($this->in, 'useInternalXmlType'));
+        $this->in->setUseRlandXmlType(false);
+        $this->assertEquals(false, $this->getPropertyValue($this->in, 'useRlandXmlType'));
     }
 
     /**
      *
      */
-    public function testuseInternalXmlDocumentDefaultTypeIsTrue()
+    public function testuseRlandXmlDocumentDefaultTypeIsTrue()
     {
-        $this->assertEquals(true, $this->getPropertyValue($this->in, 'useInternalXmlDocumentType'));
+        $this->assertEquals(true, $this->getPropertyValue($this->in, 'useRlandXmlDocumentType'));
     }
 
     /**
      *
      */
-    public function testsetUseInternalXmlDocumentTypeToFalse()
+    public function testsetUseRlandXmlDocumentTypeToFalse()
     {
-        $this->in->setUseInternalXmlDocumentType(false);
-        $this->assertEquals(false, $this->getPropertyValue($this->in, 'useInternalXmlDocumentType'));
+        $this->in->setUseRlandXmlDocumentType(false);
+        $this->assertEquals(false, $this->getPropertyValue($this->in, 'useRlandXmlDocumentType'));
     }
 
     /**

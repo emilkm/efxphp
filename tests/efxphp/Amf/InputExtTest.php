@@ -62,7 +62,7 @@ class InputExtTest extends \PHPUnit_Framework_TestCase
     {
         $data = unserialize(file_get_contents(__DIR__ . '/../../asset/value/date.amf0'));
         $this->in->setData($data);
-        $this->in->setUseInternalDateType(true);
+        $this->in->setUseRlandDateType(true);
         $obj = $this->in->readObject();
         $this->assertInstanceOf('emilkm\efxphp\Amf\Types\Date', $obj->value);
         $this->assertEquals(1422995025, $obj->value->timestamp);
@@ -76,7 +76,7 @@ class InputExtTest extends \PHPUnit_Framework_TestCase
     {
         $data = unserialize(file_get_contents(__DIR__ . '/../../asset/value/date.amf0'));
         $this->in->setData($data);
-        $this->in->setUseInternalDateType(false);
+        $this->in->setUseRlandDateType(false);
         $obj = $this->in->readObject();
         $this->assertInstanceOf('DateTime', $obj->value);
         $this->assertEquals(1422995025, $obj->value->getTimestamp());
@@ -288,7 +288,7 @@ class InputExtTest extends \PHPUnit_Framework_TestCase
     {
         $data = unserialize(file_get_contents(__DIR__ . '/../../asset/value/xml.amf0'));
         $this->in->setData($data);
-        $this->in->setUseInternalXmlType(true);
+        $this->in->setUseRlandXmlType(true);
         $obj = $this->in->readObject();
         $this->assertInstanceOf('emilkm\efxphp\Amf\Types\Xml', $obj->value);
         $this->assertEquals('<x><string>abc</string><number>123</number></x>', $obj->value->data);
@@ -301,7 +301,7 @@ class InputExtTest extends \PHPUnit_Framework_TestCase
     {
         $data = unserialize(file_get_contents(__DIR__ . '/../../asset/value/xmlelement.amf0'));
         $this->in->setData($data);
-        $this->in->setUseInternalXmlType(false);
+        $this->in->setUseRlandXmlType(false);
         $obj = $this->in->readObject();
         $this->assertInstanceOf('SimpleXMLElement', $obj->value);
         $xmlstring = preg_replace('/\>(\n|\r|\r\n| |\t)*\</', '><', trim($obj->value->asXML()));
@@ -315,7 +315,7 @@ class InputExtTest extends \PHPUnit_Framework_TestCase
     {
         $data = unserialize(file_get_contents(__DIR__ . '/../../asset/value/xmldocument.amf0'));
         $this->in->setData($data);
-        $this->in->setUseInternalXmlType(true);
+        $this->in->setUseRlandXmlType(true);
         $obj = $this->in->readObject();
         $this->assertInstanceOf('emilkm\efxphp\Amf\Types\Xml', $obj->value);
         $this->assertEquals('<x><string>abc</string><number>123</number></x>', $obj->value->data);
@@ -328,7 +328,7 @@ class InputExtTest extends \PHPUnit_Framework_TestCase
     {
         $data = unserialize(file_get_contents(__DIR__ . '/../../asset/value/domelement.amf0'));
         $this->in->setData($data);
-        $this->in->setUseInternalXmlType(false);
+        $this->in->setUseRlandXmlType(false);
         $obj = $this->in->readObject();
         $this->assertInstanceOf('SimpleXMLElement', $obj->value);
         $xmlstring = preg_replace('/\>(\n|\r|\r\n| |\t)*\</', '><', trim($obj->value->asXML()));
@@ -450,7 +450,7 @@ class InputExtTest extends \PHPUnit_Framework_TestCase
         $data = unserialize(file_get_contents(__DIR__ . '/../../asset/value/date.amf3'));
         $this->in->setData($data);
         $obj = $this->in->readObject();
-        $this->in->setUseInternalDateType(true);
+        $this->in->setUseRlandDateType(true);
         $this->assertInstanceOf('emilkm\efxphp\Amf\Types\Date', $obj->value);
         $this->assertEquals(1422995025, $obj->value->timestamp);
         $this->assertEquals(123, $obj->value->milli);
@@ -463,7 +463,7 @@ class InputExtTest extends \PHPUnit_Framework_TestCase
     {
         $data = unserialize(file_get_contents(__DIR__ . '/../../asset/value/date.amf3'));
         $this->in->setData($data);
-        $this->in->setUseInternalDateType(false);
+        $this->in->setUseRlandDateType(false);
         $obj = $this->in->readObject();
         $this->assertInstanceOf('DateTime', $obj->value);
         $this->assertEquals(1422995025, $obj->value->getTimestamp());
@@ -493,7 +493,7 @@ class InputExtTest extends \PHPUnit_Framework_TestCase
     {
         $data = unserialize(file_get_contents(__DIR__ . '/../../asset/value/date-and-reference.amf3'));
         $this->in->setData($data);
-        $this->in->setUseInternalDateType(false);
+        $this->in->setUseRlandDateType(false);
         $obj = $this->in->readObject();
         $this->assertInstanceOf('DateTime', $obj->value1);
         $this->assertInstanceOf('DateTime', $obj->value2);
@@ -807,7 +807,7 @@ class InputExtTest extends \PHPUnit_Framework_TestCase
     {
         $data = unserialize(file_get_contents(__DIR__ . '/../../asset/value/xml.amf3'));
         $this->in->setData($data);
-        $this->in->setUseInternalXmlType(true);
+        $this->in->setUseRlandXmlType(true);
         $obj = $this->in->readObject();
         $this->assertInstanceOf('emilkm\efxphp\Amf\Types\Xml', $obj->value);
         $this->assertEquals('<x><string>abc</string><number>123</number></x>', $obj->value->data);
@@ -820,7 +820,7 @@ class InputExtTest extends \PHPUnit_Framework_TestCase
     {
         $data = unserialize(file_get_contents(__DIR__ . '/../../asset/value/xmlelement.amf3'));
         $this->in->setData($data);
-        $this->in->setUseInternalXmlType(false);
+        $this->in->setUseRlandXmlType(false);
         $obj = $this->in->readObject();
         $this->assertInstanceOf('SimpleXMLElement', $obj->value);
         $xmlstring = preg_replace('/\>(\n|\r|\r\n| |\t)*\</', '><', trim($obj->value->asXML()));
@@ -834,7 +834,7 @@ class InputExtTest extends \PHPUnit_Framework_TestCase
     {
         $data = unserialize(file_get_contents(__DIR__ . '/../../asset/value/xml-and-reference.amf3'));
         $this->in->setData($data);
-        $this->in->setUseInternalXmlType(true);
+        $this->in->setUseRlandXmlType(true);
         $obj = $this->in->readObject();
         $this->assertInstanceOf('emilkm\efxphp\Amf\Types\Xml', $obj->value1);
         $this->assertInstanceOf('emilkm\efxphp\Amf\Types\Xml', $obj->value2);
@@ -849,7 +849,7 @@ class InputExtTest extends \PHPUnit_Framework_TestCase
     {
         $data = unserialize(file_get_contents(__DIR__ . '/../../asset/value/xmlelement-and-reference.amf3'));
         $this->in->setData($data);
-        $this->in->setUseInternalXmlType(false);
+        $this->in->setUseRlandXmlType(false);
         $obj = $this->in->readObject();
         $this->assertInstanceOf('SimpleXMLElement', $obj->value1);
         $this->assertInstanceOf('SimpleXMLElement', $obj->value2);
@@ -866,7 +866,7 @@ class InputExtTest extends \PHPUnit_Framework_TestCase
     {
         $data = unserialize(file_get_contents(__DIR__ . '/../../asset/value/xmldocument.amf3'));
         $this->in->setData($data);
-        $this->in->setUseInternalXmlDocumentType(true);
+        $this->in->setUseRlandXmlDocumentType(true);
         $obj = $this->in->readObject();
         $this->assertInstanceOf('emilkm\efxphp\Amf\Types\XmlDocument', $obj->value);
         $this->assertEquals('<x><string>abc</string><number>123</number></x>', $obj->value->data);
@@ -879,7 +879,7 @@ class InputExtTest extends \PHPUnit_Framework_TestCase
     {
         $data = unserialize(file_get_contents(__DIR__ . '/../../asset/value/domelement.amf3'));
         $this->in->setData($data);
-        $this->in->setUseInternalXmlDocumentType(false);
+        $this->in->setUseRlandXmlDocumentType(false);
         $obj = $this->in->readObject();
         $this->assertInstanceOf('DOMElement', $obj->value);
         $xmlstring = preg_replace('/\>(\n|\r|\r\n| |\t)*\</', '><', trim($obj->value->ownerDocument->saveXML($obj->value)));
@@ -893,7 +893,7 @@ class InputExtTest extends \PHPUnit_Framework_TestCase
     {
         $data = unserialize(file_get_contents(__DIR__ . '/../../asset/value/xmldocument-and-reference.amf3'));
         $this->in->setData($data);
-        $this->in->setUseInternalXmlDocumentType(true);
+        $this->in->setUseRlandXmlDocumentType(true);
         $obj = $this->in->readObject();
         $this->assertInstanceOf('emilkm\efxphp\Amf\Types\XmlDocument', $obj->value1);
         $this->assertInstanceOf('emilkm\efxphp\Amf\Types\XmlDocument', $obj->value2);
@@ -908,7 +908,7 @@ class InputExtTest extends \PHPUnit_Framework_TestCase
     {
         $data = unserialize(file_get_contents(__DIR__ . '/../../asset/value/domelement-and-reference.amf3'));
         $this->in->setData($data);
-        $this->in->setUseInternalXmlDocumentType(false);
+        $this->in->setUseRlandXmlDocumentType(false);
         $obj = $this->in->readObject();
         $this->assertInstanceOf('DOMElement', $obj->value1);
         $this->assertInstanceOf('DOMElement', $obj->value2);
