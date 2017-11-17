@@ -86,59 +86,7 @@ class OutputExt extends AbstractOutput
         $this->encodeFlags = ($this->avmPlus ? self::AMF_AMF3 : 0)
             | (!$this->bigEndianMachine ? self::AMF_BIGENDIAN : 0)
             | ($this->amf3nsndArrayAsObject ? self::AMF3_NSND_ARRAY_AS_OBJECT : 0);
-        $data = amf_encode($value, $this->encodeFlags, $this->userlandTypes, array(&$this, 'encodeCallback'));
+        $data = amf_encode($value, $this->encodeFlags, $this->userlandTypes);
         $this->data .= $data;
-    }
-
-    private function encodeCallback($type, $value)
-    {
-        switch ($type) {
-            case self::AMFC_DATE:
-                if ($value instanceof Date) {
-                    $amfdate = (float) $value->timestamp . $value->milli + 0.0;
-                } elseif ($value instanceof DateTime) {
-                    $amfdate = (float) $value->getTimeStamp() . floor($value->format('u') / 1000) + 0.0;
-                } else {
-                    throw new Exception('invalid type in encode callback : ' . $type);
-                }
-                return $amfdate;
-            case self::AMFC_BYTEARRAY:
-                if ($value instanceof ByteArray) {
-                    $bytestring = $value->data;
-                } else {
-                    throw new Exception('invalid type in encode callback : ' . $type);
-                }
-                return $bytestring;
-            case self::AMFC_XML:
-                if ($value instanceof Xml) {
-                    $xmlstring = $value->data;
-                } elseif ($value instanceof SimpleXMLElement) {
-                    $xmlstring = preg_replace('/\>(\n|\r|\r\n| |\t)*\</', '><', trim($value->asXML()));
-                } else {
-                    throw new Exception('invalid type in encode callback : ' . $type);
-                }
-                return $xmlstring;
-            case self::AMFC_XMLDOCUMENT:
-                if ($value instanceof XmlDocument) {
-                    $xmlstring = $value->data;
-                } elseif ($value instanceof DOMElement) {
-                    $xmlstring = preg_replace('/\>(\n|\r|\r\n| |\t)*\</', '><', trim($value->ownerDocument->saveXML($value)));
-                } else {
-                    throw new Exception('invalid type in encode callback : ' . $type);
-                }
-                return $xmlstring;
-            case self::AMFC_VECTOR_INT:
-            case self::AMFC_VECTOR_UINT:
-            case self::AMFC_VECTOR_DOUBLE:
-            case self::AMFC_VECTOR_OBJECT:
-                if (!($value instanceof Vector)) {
-                    throw new Exception('invalid type in encode callback : ' . $type);
-                }
-                return $value;
-            case self::AMFC_EXTERNALIZABLE:
-                throw new Exception('not supported yet');
-            default:
-                throw new Exception('invalid type in encode callback : ' . $type);
-        }
     }
 }

@@ -81,73 +81,8 @@ class InputExt extends AbstractInput
     {
         $this->decodeFlags = ((!$this->bigEndianMachine ? self::AMF_BIGENDIAN : 0)
             | ($this->decodeAmfObjectAsArray ? self::AMF_OBJECT_AS_ASSOC : 0));
-        $data = amf_decode($this->data, $this->pos, $this->decodeFlags, $this->userlandTypes, array(&$this, 'decodeCallback'));
+        $data = amf_decode($this->data, $this->pos, $this->decodeFlags, $this->userlandTypes);
 
         return $data;
-    }
-
-    /**
-     * @param mixed $type The AMF callback type
-     * @param mixed $arg
-     *
-     * @return {\DateTime|Types\ByteArray|\SimpleXMLElement|\stdClass|mixed}
-     */
-    private function decodeCallback($type, $arg)
-    {
-        switch ($type) {
-            case self::AMFC_DATE:
-                if ($this->useRlandDateType == true) {
-                    $value = new Date($arg);
-                } else {
-                    $timestamp = $arg / 1000;
-                    $milli = round($timestamp - ($timestamp >> 0), 3) * 1000;
-                    $timestamp = floor($timestamp);
-                    $datestr = date('Y-m-d H:i:s.', $timestamp) . $milli;
-                    $value = new DateTime($datestr, new DateTimeZone(date_default_timezone_get()));
-                }
-
-                return $value;
-            case self::AMFC_BYTEARRAY:
-                return new ByteArray($arg);
-            case self::AMFC_XML:
-                if ($this->useRlandXmlType == true) {
-                    $value = new Xml($arg);
-                } else {
-                    $value = simplexml_load_string($arg);
-                }
-
-                return $value;
-            case self::AMFC_XMLDOCUMENT:
-                if ($this->useRlandXmlDocumentType == true) {
-                    $value = new XmlDocument($arg);
-                } else {
-                    $value = dom_import_simplexml(simplexml_load_string($arg));
-                }
-
-                return $value;
-            case self::AMFC_VECTOR_INT:
-                return new Vector(Vector::AMF3_VECTOR_INT, $arg);
-            case self::AMFC_VECTOR_UINT:
-                return new Vector(Vector::AMF3_VECTOR_UINT, $arg);
-            case self::AMFC_VECTOR_DOUBLE:
-                return new Vector(Vector::AMF3_VECTOR_DOUBLE, $arg);
-            case self::AMFC_VECTOR_OBJECT:
-                return new Vector(Vector::AMF3_VECTOR_OBJECT, $arg);
-            case self::AMFC_EXTERNALIZABLE:
-                if ($arg == 'flex.messaging.io.ArrayCollection' || $arg == 'flex.messaging.io.ObjectProxy') {
-                    //returning NULL means that the externalized data is used directly. For example an array collection will not be deserialized
-                    //as an array collection with an _externalizedData field containing the source array. Rather it will be deserialized directly as the source array
-                    return;
-                } else {
-                    //externalized data we don't know what to do with. log an error, return an empty object typed with the class name.
-                    //note: this is due to a limitation in the C code.
-                    trigger_error('Unable to read externalizable data type ' . $arg, E_USER_ERROR);
-
-                    return 'error';
-                }
-                break;
-            default:
-                throw new Exception('invalid type in decode callback : ' . $type);
-        }
     }
 }
