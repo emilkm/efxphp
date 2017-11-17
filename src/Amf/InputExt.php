@@ -80,7 +80,9 @@ class InputExt extends AbstractInput
     public function readObject()
     {
         $this->decodeFlags = ((!$this->bigEndianMachine ? self::AMF_BIGENDIAN : 0)
-            | ($this->decodeAmfObjectAsArray ? self::AMF_OBJECT_AS_ASSOC : 0));
+            | ($this->decodeAmfObjectAsArray ? self::AMF_OBJECT_AS_ASSOC : 0)
+            | ($this->useRlandDateType ? self::AMF_USE_RLAND_DATE : 0)
+        );
         $data = amf_decode($this->data, $this->pos, $this->decodeFlags, $this->userlandTypes);
 
         return $data;
