@@ -41,18 +41,15 @@ class InputExt extends AbstractInput
     const AMFC_BYTEARRAY = 1;
     const AMFC_XML = 2;
     const AMFC_XMLDOCUMENT = 3;
-    const AMFC_VECTOR_INT = 4;
-    const AMFC_VECTOR_UINT = 5;
-    const AMFC_VECTOR_DOUBLE = 6;
-    const AMFC_VECTOR_OBJECT = 7;
-    const AMFC_EXTERNALIZABLE = 8;
+    const AMFC_VECTOR = 4;
+    const AMFC_EXTERNALIZABLE = 5;
 
 	private $userlandTypes = [
         'emilkm\\efxphp\\Amf\\Types\\Date' => self::AMFC_DATE,
         'emilkm\\efxphp\\Amf\\Types\\ByteArray' => self::AMFC_BYTEARRAY,
         'emilkm\\efxphp\\Amf\\Types\\Xml' => self::AMFC_XML,
         'emilkm\\efxphp\\Amf\\Types\\XmlDocument' => self::AMFC_XMLDOCUMENT,
-        'emilkm\\efxphp\\Amf\\Types\\Vector' => self::AMFC_VECTOR_OBJECT
+        'emilkm\\efxphp\\Amf\\Types\\Vector' => self::AMFC_VECTOR
     ];
 
     public $decodeFlags;
