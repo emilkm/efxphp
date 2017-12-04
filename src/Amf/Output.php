@@ -282,10 +282,6 @@ class Output extends AbstractOutput
 
     protected function writeAmf0Array(array $value)
     {
-        //Referencing is disabled in arrays because
-        //if the array contains only primitive values,
-        //then the identity operator === will say that the two arrays are strictly equal
-        //when they contain the same values, even though they may be distinct.
         $count = count($this->objects0);
         if ($count <= Constants::MAX_STORED_OBJECTS) {
             $this->objects0[$count] = &$value;

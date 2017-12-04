@@ -17,6 +17,7 @@ namespace emilkm\efxphp;
  * List properties for intellisense in some IDEs
  *
  * @property string $serverOperationMode
+ * @property bool $logAmfSerializationData
  * @property bool $returnFaultAsResult
  * @property string $servicesRootDirectory
  * @property string $servicesRootNamespace
@@ -42,6 +43,13 @@ class ServerConfig extends AbstractConfig
      * @var string
      */
     protected $serverOperationMode = ServerConfig::OPMODE_PRODUCTION;
+
+    /**
+     * Log raw data passed for decoding and encoding when error occurs.
+     *
+     * @var bool
+     */
+    protected $logAmfSerializationData = false;
 
     /**
      * @var string The root directory where services and VOs are located.

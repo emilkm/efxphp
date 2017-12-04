@@ -26,10 +26,16 @@ class MetadataCache
     public $cacheDir;
 
     /**
-     * @param string $cacheDirectory
+     * @param string $cacheDirectory Cache directory path, or NULL to disable caching.
+     *
+     * @throws Exception
      */
     public function __construct($cacheDirectory)
     {
+        if ($cacheDirectory == null) {
+            return;
+        }
+
         $this->cacheDir = $cacheDirectory;
         if (!is_writable($this->cacheDir)) {
             $this->throwException();

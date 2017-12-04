@@ -16,14 +16,15 @@ use emilkm\efxphp\Amf\Serializer;
 use emilkm\efxphp\Amf\ActionMessage;
 use emilkm\efxphp\Amf\MessageHeader;
 use emilkm\efxphp\Amf\MessageBody;
-use emilkm\efxphp\Amf\Messages\AcknowledgeMessage;
-use emilkm\efxphp\Amf\Messages\CommandMessage;
-use emilkm\efxphp\Amf\Messages\ErrorMessage;
+use flex\messaging\messages\AcknowledgeMessage;
+use flex\messaging\messages\CommandMessage;
+use flex\messaging\messages\ErrorMessage;
 
 use ReflectionMethod;
 use ReflectionProperty;
 use Exception;
 use Error;
+use DateTime;
 
 /**
  * @author  Emil Malinov
@@ -97,6 +98,11 @@ class Server
      * @var LoggerInterface
      */
     protected $log;
+
+    /**
+     * @var string
+     */
+    private $amfDdFileName;
 
     /**
      * lots of seams
@@ -230,6 +236,13 @@ class Server
     protected function decode()
     {
         $data = $this->getRawPostData();
+
+        if ($this->config->logAmfSerializationData) {
+            $date = new DateTime('now');
+            $this->amfDdFileName = $this->config->logDirectory . '/amf_' . $date->format('Y-m-d.H-i-s.v') . '.dd';
+            file_put_contents($this->amfDdFileName, serialize($data));
+        }
+
         $this->actionContext->requestMessage = $this->deserializer->readMessage($data);
     }
 
@@ -284,7 +297,7 @@ class Server
             $this->actionContext->responseMessage->bodies[$this->actionContext->messageIndex] = $responseBody;
 
             try {
-                if ($this->actionContext->errors[$this->actionContext->messageIndex] instanceof Exception) {
+                if (count($this->actionContext->errors) > 0 && $this->actionContext->errors[$this->actionContext->messageIndex] instanceof Exception) {
                     throw $this->actionContext->errors[$this->actionContext->messageIndex];
                 }
 
@@ -293,6 +306,9 @@ class Server
                 if ($requestMessage instanceof CommandMessage) {
                     if ($requestMessage->operation != CommandMessage::CLIENT_PING_OPERATION) {
                         throw new Exception('Operation not supported.');
+                    }
+                    if ($this->config->logAmfSerializationData) {
+                        @unlink($this->amfDdFileName);
                     }
                     $responseBody->targetURI .= Constants::RESULT_METHOD;
                     break;
@@ -307,7 +323,10 @@ class Server
                 $this->validate($requestMessage);
                 $this->invoke($requestMessage, $responseMessage);
                 $responseBody->targetURI .= Constants::RESULT_METHOD;
-            } catch (Exception $e) {
+            } catch (Exception | Error $e) {
+                if ($this->config->logAmfSerializationData) {
+                    @unlink($this->amfDdFileName);
+                }
                 $responseBody->targetURI .= Constants::STATUS_METHOD;
                 $responseBody->data = $errorMessage = new ErrorMessage($requestMessage);
 
@@ -455,6 +474,10 @@ class Server
      */
     protected function invoke($requestMessage, $responseMessage, $serviceInstance)
     {
+        if ($this->config->logAmfSerializationData) {
+            @unlink($this->amfDdFileName);
+        }
+
         try {
             if ($serviceInstance == null) {
                 $classMetadata = $this->actionContext->classMetadata[$this->actionContext->messageIndex];
@@ -505,7 +528,17 @@ class Server
 
     protected function encode()
     {
+        if ($this->config->logAmfSerializationData) {
+            $date = new DateTime('now');
+            $filename = $this->config->logDirectory . '/amf_' . $date->format('Y-m-d.H-i-s.v') . '.ed';
+            file_put_contents($filename, serialize($this->actionContext->responseMessage));
+        }
+
         $this->responseData = $this->serializer->writeMessage($this->actionContext->responseMessage);
+
+        if ($this->config->logAmfSerializationData) {
+            @unlink($filename);
+        }
     }
 
     protected function respond()
