@@ -16,10 +16,10 @@ use emilkm\efxphp\Amf\Serializer;
 use emilkm\efxphp\Amf\ActionMessage;
 use emilkm\efxphp\Amf\MessageHeader;
 use emilkm\efxphp\Amf\MessageBody;
-use emilkm\efxphp\Amf\Messages\AcknowledgeMessage;
-use emilkm\efxphp\Amf\Messages\CommandMessage;
-use emilkm\efxphp\Amf\Messages\ErrorMessage;
-use emilkm\efxphp\Amf\Messages\RemotingMessage;
+use flex\messaging\messages\AcknowledgeMessage;
+use flex\messaging\messages\CommandMessage;
+use flex\messaging\messages\ErrorMessage;
+use flex\messaging\messages\RemotingMessage;
 
 use Exception;
 
@@ -57,7 +57,15 @@ class Client
      */
     private $response = null;
 
-    private $sidPropagation = 'header'; // header or query
+    /**
+     * @var string 'header' or 'query'
+     */
+    private $sidPropagation = 'header';
+
+    /**
+     * @var bool Enable/Disable content encoding event when it is available.
+     */
+    private $encodingEnabled = true;
 
     private $sequence = 0;
 
@@ -120,6 +128,14 @@ class Client
             throw new Exception("sidPropagation: 'header' = through AMF RemoteMessage header sID, 'query' = through query string sID");
         }
         $this->sidPropagation = $value;
+    }
+
+    /**
+     * @param bool $value
+     */
+    public function setEncodingEnabled($value)
+    {
+        $this->encodingEnabled = $value;
     }
 
     /**
@@ -234,7 +250,7 @@ class Client
         $headers[] = 'Content-Type: application/x-amf';
         $headers[] = 'Content-length: ' . strlen($requestData);
 
-        if (function_exists('gzdecode')) {
+        if ($this->encodingEnabled && function_exists('gzdecode')) {
             if (function_exists('gzinflate')) {
                 $headers[] = 'Accept-Encoding: gzip, deflate';
             } else {
@@ -325,7 +341,7 @@ class Client
         }
 
         if ($responseMessage instanceof ErrorMessage) {
-            $this->response->error = new ResponseError($responseMessage->faultString, $responseMessage->faultCode, $responseMessage->faultDetail);
+            $this->response->error = new ResponseError('Remote: ' . $responseMessage->faultString, $responseMessage->faultCode, $responseMessage->faultDetail);
             return $this->response->error;
         }
 
@@ -333,10 +349,10 @@ class Client
             $this->clientId = $responseMessage->clientId;
             return $responseMessage->body;
         } elseif ($responseMessage->body instanceof Response && $responseMessage->body->code < 0) {
-            $this->response->error = new ResponseError($responseMessage->body->message, $responseMessage->body->code, $responseMessage->body->detail);
+            $this->response->error = new ResponseError('Remote: ' . $responseMessage->body->message, $responseMessage->body->code, $responseMessage->body->detail);
             return $this->response->error;
         } elseif (isset($responseMessage->body->type) && $responseMessage->body->type == -1) {
-            $this->response->error = new ResponseError($responseMessage->body->message, $responseMessage->body->code, $responseMessage->body->detail);
+            $this->response->error = new ResponseError('Remote: ' . $responseMessage->body->message, $responseMessage->body->code, $responseMessage->body->detail);
             return $this->response->error;
         } else {
             return $responseMessage->body;
