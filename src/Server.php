@@ -375,6 +375,8 @@ class Server
     /**
      * @param RemotingMessage $message
      * @return mixed Method access array or null.
+     *
+     * @throws \Exception
      */
     protected function authorize($message)
     {
@@ -409,8 +411,9 @@ class Server
 
             }
 
-            $this->autzProvider->authorize($classMetadata['className'], $message->operation, $methodAccess);
-
+            if (!$this->autzProvider->authorize($classMetadata['className'], $message->operation, $methodAccess)) {
+                throw new Exception('Not Authorized');
+            }
             return $serviceInstance;
         }
 
@@ -426,13 +429,17 @@ class Server
             return null;
         }
 
-        $this->autzProvider->authorize($classMetadata['className'], $message->operation, $method['access']);
+        if (!$this->autzProvider->authorize($classMetadata['className'], $message->operation, $method['access'])) {
+            throw new Exception('Not Authorized');
+        }
 
         return null;
     }
 
     /**
      * @param RemotingMessage $message
+     *
+     * @throws \Exception
      */
     protected function validate($message)
     {
@@ -471,6 +478,8 @@ class Server
      * @param RemotingMessage $requestMessage
      * @param AcknowledgeMessage $responseMessage
      * @param mixed $serviceInstance
+     *
+     * @throws \Exception
      */
     protected function invoke($requestMessage, $responseMessage, $serviceInstance)
     {

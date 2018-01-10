@@ -30,6 +30,7 @@ abstract class AbstractConfig
         if (!property_exists($this, $setting)) {
             throw new Exception('Configuration setting does not exist.');
         }
+
         return $this->$setting;
     }
 
@@ -42,6 +43,7 @@ abstract class AbstractConfig
         if (!$this->_skipPropertyExistsCheck && !property_exists($this, $setting)) {
             throw new Exception('Configuration setting does not exist.');
         }
+
         $this->$setting = $value;
         $this->_skipPropertyExistsCheck = false;
     }
@@ -57,6 +59,7 @@ abstract class AbstractConfig
         if (!property_exists($this, $setting)) {
             return $ifnxornull;
         }
+
         return ($this->$setting === null) ? $ifnxornull : $this->$setting;
     }
 
