@@ -3,7 +3,7 @@ dist: trusty
 language: C
 
 env:
-    - PHP_VERSION=7.1.1
+    - PHP_VERSION=7.1.14
 
 matrix:
     fast_finish: true
